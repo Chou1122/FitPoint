@@ -40,7 +40,9 @@ export const CustomText: React.FC<CustomTextProps> = ({
   const fontFamily = fontMap[fontWeight];
 
   return (
-    <Text style={[styles.defaultStyle, {fontFamily}, style]} {...props}>
+    <Text
+      style={[styles.defaultStyle, {textAlign: 'center'}, {fontFamily}, style]}
+      {...props}>
       {children}
     </Text>
   );
@@ -50,5 +52,6 @@ const styles = StyleSheet.create({
   defaultStyle: {
     fontSize: 16,
     color: '#000',
+    lineHeight: 20,
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, useColorScheme} from 'react-native';
-
-import {NavigationContainer, ThemeProvider} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Home} from './src/screens/Home/Home';
-import {SportSelection} from './src/screens/SportSelection/SportSelction';
+import {Home} from './src/screens/Home/home';
+import {SportSelection} from './src/screens/SportSelection/sport-selection';
+import {SportDetail} from './src/screens/SportDetail/sport-detail';
+import {SportTutorial} from './src/screens/SportTutorial/sport-tutorial';
 
 const Stack = createStackNavigator();
 
@@ -12,10 +12,13 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="SportSelection"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SportSelection" component={SportSelection} />
+        {/* @ts-ignore */}
+        <Stack.Screen name="SportDetail" component={SportDetail} />
+        <Stack.Screen name="SportTutorial" component={SportTutorial} />
       </Stack.Navigator>
     </NavigationContainer>
   );

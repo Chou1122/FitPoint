@@ -3,10 +3,7 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
-import {
-  SportCard,
-  SportCardProps,
-} from '../SportSelection/sport-card/sport-card';
+import {SportCard, SportCardProps} from './sport-card/sport-card';
 import {useState} from 'react';
 
 const {colors} = theme;
@@ -19,7 +16,7 @@ const mockData = [
   {name: 'Push up', id: '0'},
 ];
 
-export const Home = () => {
+export const SportSelection = () => {
   const navigation = useAppNavigation();
   const [sportList, setSportList] = useState<Array<SportCardProps>>(mockData);
 

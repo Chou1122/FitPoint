@@ -72,5 +72,6 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: colors.white,
+    textAlign: 'left',
   },
 });

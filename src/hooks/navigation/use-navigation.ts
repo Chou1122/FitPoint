@@ -1,9 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import { SportDetailProps } from '../../screens/SportDetail/sport-detail';
 
 type AppStackParamList = {
   Home: undefined;
   SportSelection: undefined;
+  SportDetail: SportDetailProps;
+  SportTutorial: undefined;
 };
 
 type AppNavigationProp = StackNavigationProp<AppStackParamList>;
