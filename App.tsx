@@ -5,6 +5,7 @@ import {Home} from './src/screens/Home/home';
 import {SportSelection} from './src/screens/SportSelection/sport-selection';
 import {SportDetail} from './src/screens/SportDetail/sport-detail';
 import {SportTutorial} from './src/screens/SportTutorial/sport-tutorial';
+import {SportRecording} from './src/screens/SportRecording/sport-recording';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ function App(): React.JSX.Element {
         {/* @ts-ignore */}
         <Stack.Screen name="SportDetail" component={SportDetail} />
         <Stack.Screen name="SportTutorial" component={SportTutorial} />
+        <Stack.Screen name="SportRecording" component={SportRecording} />
       </Stack.Navigator>
     </NavigationContainer>
   );

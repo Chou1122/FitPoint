@@ -49,7 +49,9 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
     );
   };
 
-  const handleStartPress = () => {};
+  const handleStartPress = () => {
+    navigation.navigate('SportRecording');
+  };
 
   const handleTutorialPress = () => {
     navigation.navigate('SportTutorial');
@@ -96,7 +98,7 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
         )}
       </View>
 
-      <TouchableOpacity style={styles.btnStart}>
+      <TouchableOpacity style={styles.btnStart} onPress={handleStartPress}>
         <Text style={styles.textBtnStart}>Start the test</Text>
       </TouchableOpacity>
     </View>

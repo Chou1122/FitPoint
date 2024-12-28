@@ -5,6 +5,8 @@ import {CustomText as Text} from '../../component/text-custom/text-custom';
 import Video, {VideoRef} from 'react-native-video';
 import {theme} from '../../hooks/theme/theme';
 import {Icon, IconName} from '../../component/icon/icon';
+import useAppNavigation from '../../hooks/navigation/use-navigation';
+
 const {colors, space, font} = theme;
 
 const mockTip = [
@@ -21,6 +23,8 @@ const mockTip = [
 ];
 
 export const SportTutorial = () => {
+  const navigation = useAppNavigation();
+
   const videoRef = useRef<VideoRef>(null);
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [isShowPause, setIsShowPause] = useState<boolean>(false);
@@ -58,6 +62,10 @@ export const SportTutorial = () => {
     videoRef.current?.seek(0);
     setIsPaused(true);
     setOpacityIcon(1);
+  };
+
+  const handleStartPress = () => {
+    navigation.navigate('SportRecording');
   };
 
   const renderTip = (item: any) => {
@@ -101,7 +109,9 @@ export const SportTutorial = () => {
         {tipList.map(item => renderTip(item))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.btnStartWrapper}>
+      <TouchableOpacity
+        style={styles.btnStartWrapper}
+        onPress={handleStartPress}>
         <Text style={styles.textBtnStart}>Let's practice!</Text>
       </TouchableOpacity>
     </View>
