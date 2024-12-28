@@ -1,9 +1,14 @@
 import React from 'react';
 import {IconBack} from './icons-list/icon-back';
+import {IconPause} from './icons-list/icon-pause';
+import {IconPlay} from './icons-list/icon-play';
+
 import {View, ViewProps} from 'react-native';
 
 export enum IconName {
   'icon-back',
+  'icon-pause',
+  'icon-play',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -19,6 +24,14 @@ export interface IconProps {
 
 export const Icon = ({name, style = {}}: IconProps) => {
   return (
-    <View>{name === IconName['icon-back'] && <IconBack {...style} />}</View>
+    <View>
+      {name === IconName['icon-back'] ? (
+        <IconBack {...style} />
+      ) : name === IconName['icon-pause'] ? (
+        <IconPause {...style} />
+      ) : name === IconName['icon-play'] ? (
+        <IconPlay {...style} />
+      ) : null}
+    </View>
   );
 };
