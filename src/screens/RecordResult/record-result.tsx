@@ -23,15 +23,15 @@ export const RecordResult = ({id}: any) => {
   const navigation = useAppNavigation();
 
   const [duration, setDuration] = useState<string>('00:16');
-  const [accuracy, setAccuracy] = useState<number>(60.237);
-  const [stability, setStability] = useState<number>(59.894);
+  const [accuracy, setAccuracy] = useState<number>(71.237);
+  const [stability, setStability] = useState<number>(49.894);
   const [repetitions, setRepetitions] = useState<number>(4);
-  const [overall, setOverall] = useState<number>(5.807);
+  const [overall, setOverall] = useState<number>(6.017);
 
   const [commentList, setCommentList] = useState<string[]>(mockCmt);
   const [rankList, setRankList] = useState<string[]>(mockRank);
 
-  const styles = createStyle(overall);
+  const styles = createStyle(accuracy, stability, overall);
 
   const onBack = () => {
     navigation.navigate('SportDetail', {id: '0'});
@@ -85,12 +85,12 @@ export const RecordResult = ({id}: any) => {
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Accuracy:</Text>
-            <Text style={styles.textDetail}>{accuracy}%</Text>
+            <Text style={styles.accuracyText}>{accuracy}%</Text>
           </View>
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Stability:</Text>
-            <Text style={styles.textDetail}>{stability}%</Text>
+            <Text style={styles.stabilityText}>{stability}%</Text>
           </View>
 
           <View style={styles.resultDetail}>
@@ -102,7 +102,7 @@ export const RecordResult = ({id}: any) => {
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Overall:</Text>
-            <Text style={styles.textDetail}>{overall}</Text>
+            <Text style={styles.overallText}>{overall}</Text>
           </View>
         </View>
 
@@ -131,7 +131,7 @@ export const RecordResult = ({id}: any) => {
   );
 };
 
-const createStyle = (overall: number) =>
+const createStyle = (accuracy: number, stability: number, overall: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -267,5 +267,53 @@ const createStyle = (overall: number) =>
           ? colors.bad
           : colors.veryBad,
       textAlign: 'justify',
+    },
+    overallText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        overall >= 9
+          ? colors.veryGood
+          : overall >= 7
+          ? colors.good
+          : overall >= 5
+          ? colors.neutral
+          : overall >= 3
+          ? colors.bad
+          : colors.veryBad,
+    },
+    accuracyText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        accuracy >= 90
+          ? colors.veryGood
+          : accuracy >= 70
+          ? colors.good
+          : accuracy >= 50
+          ? colors.neutral
+          : accuracy >= 30
+          ? colors.bad
+          : colors.veryBad,
+    },
+    stabilityText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        stability >= 90
+          ? colors.veryGood
+          : stability >= 70
+          ? colors.good
+          : stability >= 50
+          ? colors.neutral
+          : stability >= 30
+          ? colors.bad
+          : colors.veryBad,
     },
   });

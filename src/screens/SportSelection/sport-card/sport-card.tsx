@@ -12,7 +12,7 @@ export interface SportCardProps {
   name?: string | undefined;
   img?: string | undefined;
   score?: number | undefined;
-  duration?: string | undefined;
+  duration?: string | undefined | number;
   maxScore?: number;
   id: string;
   showVideo?: boolean;
@@ -25,7 +25,7 @@ export const SportCard = ({
   img,
   score = 0,
   maxScore = 100,
-  duration = '10',
+  duration = '1',
   id = '0',
   showVideo = false,
   onPressCard,

@@ -66,12 +66,14 @@ export const SportTutorial = () => {
 
   const handleStartPress = () => {
     navigation.navigate('SportRecording');
+    handleVideoEnd();
   };
 
   const renderTip = (item: any) => {
     return (
-      <View>
-        <Text style={styles.tipText}>{`- ${item}`}</Text>
+      <View style={styles.tipWrap}>
+        <View style={styles.dot} />
+        <Text style={styles.tipText}>{item}</Text>
       </View>
     );
   };
@@ -149,6 +151,12 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     fontWeight: 'bold',
   },
+  tipWrap: {
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 12,
+  },
   timeText: {
     textAlign: 'left',
     fontSize: 16,
@@ -164,6 +172,13 @@ const styles = StyleSheet.create({
   },
   video: {
     flex: 1,
+  },
+  dot: {
+    marginTop: 12,
+    backgroundColor: colors.black,
+    height: 5,
+    width: 5,
+    borderRadius: 100,
   },
   btnStartWrapper: {
     height: 48,
@@ -193,8 +208,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 16,
     lineHeight: 20,
-    paddingLeft: 20,
     paddingRight: 12,
     marginVertical: 4,
+    marginRight: 12,
   },
 });

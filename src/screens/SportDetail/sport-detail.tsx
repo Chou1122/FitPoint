@@ -11,22 +11,13 @@ const {colors, space, font} = theme;
 const heightLabel = 32;
 
 const mockData = [
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
-  {score: '1'},
+  {time: '20/12/2024 12:59', score: '0'},
+  {time: '22/12/2024 00:13', score: '34'},
+  {time: '22/12/2024 00:20', score: '55'},
+  {time: '23/12/2024 11:08', score: '89'},
+  {time: '23/12/2024 12:05', score: '2'},
+  {time: '23/12/2024 08:38', score: '65'},
+  {time: '24/12/2024 10:22', score: '72'},
 ];
 
 export interface SportDetailProps {
@@ -34,15 +25,15 @@ export interface SportDetailProps {
 }
 
 export const SportDetail = ({id = '0'}: SportDetailProps) => {
-  const [history, setHistory] = useState(mockData);
+  const [history, setHistory] = useState<any>(mockData);
   const navigation = useAppNavigation();
 
   const renderItem = ({item, isLast = false}: any) => {
     return (
       <View style={styles.historyItem}>
         <View style={styles.contentItem}>
-          <Text style={{flex: 1}}>1 2 3</Text>
-          <Text style={{flex: 1}}>12</Text>
+          <Text style={{flex: 1}}>{item.time}</Text>
+          <Text style={{flex: 1}}>{item.score}</Text>
         </View>
         {!isLast && <View style={styles.lineGray} />}
       </View>

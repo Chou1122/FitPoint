@@ -4,6 +4,7 @@ import {CustomText as Text} from '../text-custom/text-custom';
 import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {Icon, IconName} from '../icon/icon';
+import {Logo} from '../logo/logo';
 
 const {colors} = theme;
 
@@ -24,19 +25,25 @@ export const Header = ({btnGoBack = true, title, onBack}: HeaderProps) => {
 
   return (
     <View style={styles.container}>
-      {btnGoBack && (
-        <TouchableOpacity style={styles.btnGoBack} onPress={handleGoBack}>
-          <Icon
-            name={IconName['icon-back']}
-            style={{height: 20, width: 20, color: colors.white}}
-          />
-        </TouchableOpacity>
-      )}
-      {title && (
-        <View style={styles.titleWrapper}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
-      )}
+      <View style={styles.btnWrapper}>
+        {btnGoBack && (
+          <TouchableOpacity style={styles.btnGoBack} onPress={handleGoBack}>
+            <Icon
+              name={IconName['icon-back']}
+              style={{height: 20, width: 20, color: colors.white}}
+            />
+          </TouchableOpacity>
+        )}
+        {title && (
+          <View style={styles.titleWrapper}>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.logoWrapper}>
+        <Logo theme={'light'} size={'normal'} />
+      </View>
     </View>
   );
 };
@@ -55,12 +62,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3.5, // Blur radius of the shadow
     // Android shadow
     elevation: 8, // Elevation for Android
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnWrapper: {
+    flexDirection: 'row',
+    flex: 1,
   },
   btnGoBack: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 8,
     paddingLeft: 8,
   },
   textGoBack: {
@@ -69,10 +81,13 @@ const styles = StyleSheet.create({
   titleWrapper: {
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
+    marginLeft: 16,
   },
   titleText: {
     color: colors.white,
     textAlign: 'left',
+  },
+  logoWrapper: {
+    marginRight: 8,
   },
 });

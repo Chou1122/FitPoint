@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   countdownText: {
-    fontSize: 60,
+    fontSize: 72,
     fontWeight: 'bold',
     color: colors.white,
     textAlign: 'center',

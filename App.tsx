@@ -7,6 +7,7 @@ import {SportDetail} from './src/screens/SportDetail/sport-detail';
 import {SportTutorial} from './src/screens/SportTutorial/sport-tutorial';
 import {SportRecording} from './src/screens/SportRecording/sport-recording';
 import {RecordResult} from './src/screens/RecordResult/record-result';
+import {IntroScreen} from './src/screens/Intro/intro-screen';
 
 const Stack = createStackNavigator();
 
@@ -14,8 +15,9 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="RecordResult"
+        initialRouteName="IntroScreen"
         screenOptions={{headerShown: false}}>
+        <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SportSelection" component={SportSelection} />
         {/* @ts-ignore */}

@@ -7,6 +7,7 @@ import {IconHappy} from './icons-list/icon-happy';
 import {IconNeutral} from './icons-list/icon-neutral';
 import {IconSad} from './icons-list/icon-sad';
 import {IconVerySad} from './icons-list/icon-very-sad';
+import {IconHandWithWeight} from './icons-list/icon-hand-with-weight';
 
 import {View, ViewProps} from 'react-native';
 
@@ -19,6 +20,7 @@ export enum IconName {
   'icon-neutral',
   'icon-sad',
   'icon-very-sad',
+  'icon-hand-with-weight',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -51,6 +53,8 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconSad {...style} />
       ) : name === IconName['icon-very-sad'] ? (
         <IconVerySad {...style} />
+      ) : name === IconName['icon-hand-with-weight'] ? (
+        <IconHandWithWeight {...style} />
       ) : null}
     </View>
   );
