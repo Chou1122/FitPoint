@@ -8,6 +8,7 @@ type AppStackParamList = {
   SportDetail: SportDetailProps;
   SportTutorial: undefined;
   SportRecording: undefined;
+  RecordResult: undefined;
 };
 
 type AppNavigationProp = StackNavigationProp<AppStackParamList>;

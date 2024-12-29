@@ -1,5 +1,10 @@
-import React, {useRef, useState} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {
   Camera,
   useCameraDevice,
@@ -8,6 +13,7 @@ import {
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
+import useAppNavigation from '../../hooks/navigation/use-navigation';
 
 const {colors, font, space} = theme;
 
@@ -24,9 +30,11 @@ export const SportRecording = () => {
   const device = useCameraDevice('back');
   const {hasPermission} = useCameraPermission();
   const cameraRef = useRef<Camera | null>(null);
+  const navigation = useAppNavigation();
 
   const [isRecording, setIsRecording] = useState(false);
   const [isCountdown, setIsCountdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [countDown, setCountDown] = useState<number>(-1);
   const [tipList, setTipList] = useState(mockTips);
@@ -43,7 +51,7 @@ export const SportRecording = () => {
   };
 
   const startCountdown = () => {
-    setCountDown(3); // 3-second countdown
+    setCountDown(3);
     setIsCountdown(true);
     const interval = setInterval(() => {
       setCountDown(prev => {
@@ -76,6 +84,11 @@ export const SportRecording = () => {
     if (cameraRef.current == null) return;
     await cameraRef.current.stopRecording();
     setIsRecording(false);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigation.navigate('RecordResult');
+    }, 3000);
   };
 
   const renderTip = (item: any) => {
@@ -90,6 +103,12 @@ export const SportRecording = () => {
   return (
     <View style={styles.container}>
       <Header title={'Workout Recording'} />
+
+      {isLoading ? (
+        <View style={styles.loadingCon}>
+          <ActivityIndicator size={60} style={{opacity: 1}} />
+        </View>
+      ) : null}
 
       <Text style={styles.labelSport}>Push Up</Text>
       <Text style={styles.timeText}>Estimate time: 1 minute</Text>
@@ -225,5 +244,17 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     lineHeight: 80,
+  },
+  loadingCon: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 100,
+    width: '100%',
+    height: '100%',
+    backgroundColor: colors.black,
+    opacity: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

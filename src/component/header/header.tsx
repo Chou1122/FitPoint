@@ -10,15 +10,16 @@ const {colors} = theme;
 const heightHeader = 60;
 
 export interface HeaderProps {
+  onBack?: () => void;
   btnGoBack?: boolean;
   title?: string;
 }
 
-export const Header = ({btnGoBack = true, title}: HeaderProps) => {
+export const Header = ({btnGoBack = true, title, onBack}: HeaderProps) => {
   const navigation = useAppNavigation();
 
   const handleGoBack = () => {
-    navigation.goBack();
+    !onBack ? navigation.goBack() : onBack();
   };
 
   return (
