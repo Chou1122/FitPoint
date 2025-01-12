@@ -5,6 +5,7 @@ import {CustomText as Text} from '../../component/text-custom/text-custom';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import Video, {VideoRef} from 'react-native-video';
 import {Logo} from '../../component/logo/logo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {colors, font, space} = theme;
 
@@ -13,8 +14,10 @@ export const IntroScreen = () => {
 
   const videoRef = useRef<VideoRef>(null);
 
-  const handleStartPress = () => {
-    navigation.navigate('Home');
+  const handleStartPress = async () => {
+    await AsyncStorage.setItem('first-time-use', 'true');
+
+    navigation.navigate('MainTab');
   };
 
   return (

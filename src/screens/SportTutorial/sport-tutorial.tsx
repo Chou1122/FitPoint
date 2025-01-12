@@ -71,7 +71,7 @@ export const SportTutorial = () => {
 
   const renderTip = (item: any) => {
     return (
-      <View style={styles.tipWrap}>
+      <View style={styles.tipWrap} key={item}>
         <View style={styles.dot} />
         <Text style={styles.tipText}>{item}</Text>
       </View>

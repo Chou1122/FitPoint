@@ -87,13 +87,16 @@ export const SportRecording = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      navigation.navigate('RecordResult');
-    }, 3000);
+      navigation.navigate('MainTab', {
+        screen: 'Home',
+        params: {screen: 'RecordResult'},
+      });
+    }, 1000);
   };
 
   const renderTip = (item: any) => {
     return (
-      <View style={styles.tipWrapper}>
+      <View style={styles.tipWrapper} key={item}>
         <View style={styles.dot} />
         <Text style={styles.tipText}>{`${item}`}</Text>
       </View>

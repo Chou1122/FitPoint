@@ -1,21 +1,35 @@
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { SportDetailProps } from '../../screens/SportDetail/sport-detail';
 
-type AppStackParamList = {
+// Tab navigation parameter list
+type TabParamList = {
   Home: undefined;
   SportSelection: undefined;
-  SportDetail: SportDetailProps;
-  SportTutorial: undefined;
-  SportRecording: undefined;
   RecordResult: undefined;
-  IntroScreen: undefined;
 };
 
-type AppNavigationProp = StackNavigationProp<AppStackParamList>;
+// Stack navigation parameter list
+type StackParamList = {
+  MainTab: undefined;
+  IntroScreen: undefined;
+  Login: undefined;
+  Info: undefined;
+  SportRecording: undefined;
+  SportDetail: SportDetailProps;
+  SportTutorial: undefined;
 
+};
+
+// Define the combined navigation prop
+type AppNavigationProp = StackNavigationProp<StackParamList> & 
+  BottomTabNavigationProp<TabParamList>;
+
+// Hook to use navigation with proper type safety
 const useAppNavigation = () => {
-  return useNavigation<AppNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
+  return navigation;
 };
 
 export default useAppNavigation;

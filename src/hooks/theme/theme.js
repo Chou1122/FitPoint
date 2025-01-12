@@ -13,6 +13,8 @@ export const theme = {
     blue: '#246be2',
     blue2: '#1052bf',
     gray: '#cdcdcd',
+    gray2: '#b5b3b3',
+    gray3: '#a5a4a4',
     yellow: '#ffe403',
     veryGood: '#4CAF50',
     good: '#8BC34A',
@@ -23,8 +25,12 @@ export const theme = {
   space: {
     marginBottomBtn: 16,
     marginHorizontalBtn: 24,
+    tabBarHeight: 60,
+    iconBottomTab: 28,
+    lineHeightTab: 20,
   },
   font: {
     fontBtnBottom: 18,
+    fontTabBottom: 14,
   },
 };
