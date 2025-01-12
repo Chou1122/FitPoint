@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainStack} from './src/routes/main.navigation';
 import {Icon, IconName} from './src/component/icon/icon';
 import {CustomText as Text} from './src/component/text-custom/text-custom';
-import {StyleSheet} from 'react-native';
+import {InfoStack} from './src/routes/info.navigation';
 
 const {space, colors, font} = theme;
 
@@ -67,7 +67,7 @@ function MainTabs() {
         tabBarInactiveTintColor: colors.gray3,
       })}>
       <Tab.Screen name="Home" component={MainStack} />
-      <Tab.Screen name="Profile" component={AccountInfo} />
+      <Tab.Screen name="Profile" component={InfoStack} />
     </Tab.Navigator>
   );
 }

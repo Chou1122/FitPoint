@@ -9,9 +9,17 @@ import {IconSad} from './icons-list/icon-sad';
 import {IconVerySad} from './icons-list/icon-very-sad';
 import {IconHandWithWeight} from './icons-list/icon-hand-with-weight';
 import {IconHome} from './icons-list/icon-home';
+import {IconMockAvt} from './icons-list/icon-mock-avt';
 
 import {View, ViewProps} from 'react-native';
 import {IconProfile} from './icons-list/icon-profile';
+import {IconEdit} from './icons-list/icon-edit';
+import {IconEmail} from './icons-list/icon-email';
+import {IconPhone} from './icons-list/icon-phone';
+import {IconAddress} from './icons-list/icon-address';
+import {IconGender} from './icons-list/icon-gender';
+import {IconTime} from './icons-list/icon-time';
+import {IconEarth} from './icons-list/icon-earth';
 
 export enum IconName {
   'icon-back',
@@ -25,6 +33,14 @@ export enum IconName {
   'icon-hand-with-weight',
   'icon-home',
   'icon-profile',
+  'icon-mock-avt',
+  'icon-edit',
+  'icon-email',
+  'icon-phone',
+  'icon-address',
+  'icon-gender',
+  'icon-time',
+  'icon-earth',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -63,6 +79,22 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconHome {...style} />
       ) : name === IconName['icon-profile'] ? (
         <IconProfile {...style} />
+      ) : name === IconName['icon-mock-avt'] ? (
+        <IconMockAvt {...style} />
+      ) : name === IconName['icon-edit'] ? (
+        <IconEdit {...style} />
+      ) : name === IconName['icon-email'] ? (
+        <IconEmail {...style} />
+      ) : name === IconName['icon-phone'] ? (
+        <IconPhone {...style} />
+      ) : name === IconName['icon-address'] ? (
+        <IconAddress {...style} />
+      ) : name === IconName['icon-gender'] ? (
+        <IconGender {...style} />
+      ) : name === IconName['icon-time'] ? (
+        <IconTime {...style} />
+      ) : name === IconName['icon-earth'] ? (
+        <IconEarth {...style} />
       ) : null}
     </View>
   );

@@ -28,9 +28,16 @@ export const theme = {
     tabBarHeight: 60,
     iconBottomTab: 28,
     lineHeightTab: 20,
+    avtNormal: 40,
+    avtBig: 52,
+    avtGiant: 80,
+    avtInfo: 120,
+    iconLabelInfo: 28,
+    iconLabelInfo2: 32,
   },
   font: {
     fontBtnBottom: 18,
     fontTabBottom: 14,
+    fontNameInfo: 20,
   },
 };
