@@ -38,6 +38,7 @@ export const Login = () => {
 
   const handleLoginPress = async () => {
     setIsLoading(true);
+    // Call API
   };
 
   const handleForgotPress = () => {};
@@ -58,9 +59,11 @@ export const Login = () => {
             source={require('../../assets/images/gym-img.webp')}
             style={styles.img}
           />
-        </View>
-        <View style={styles.infoWrapper}>
-          <Text style={styles.textInfo}>v {version}</Text>
+          {
+            <View style={styles.infoWrapper}>
+              <Text style={styles.textInfo}>v {version}</Text>
+            </View>
+          }
         </View>
         <KeyboardAvoidingView
           style={styles.scrlWrapper}
