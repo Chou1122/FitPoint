@@ -10,7 +10,6 @@ import {IconVerySad} from './icons-list/icon-very-sad';
 import {IconHandWithWeight} from './icons-list/icon-hand-with-weight';
 import {IconHome} from './icons-list/icon-home';
 import {IconMockAvt} from './icons-list/icon-mock-avt';
-
 import {View, ViewProps} from 'react-native';
 import {IconProfile} from './icons-list/icon-profile';
 import {IconEdit} from './icons-list/icon-edit';
@@ -23,6 +22,8 @@ import {IconEarth} from './icons-list/icon-earth';
 import {IconEyeOpen} from './icons-list/icon-eye-open';
 import {IconEyeClose} from './icons-list/icon-eye.close';
 import {IconWarning} from './icons-list/icon-warning';
+import {IconTrophy} from './icons-list/icon-trophy';
+import {IconTrophyStar} from './icons-list/icon-trophy-star';
 
 export enum IconName {
   'icon-back',
@@ -47,6 +48,8 @@ export enum IconName {
   'icon-eye-open',
   'icon-eye-close',
   'icon-warning',
+  'icon-trophy',
+  'icon-trophy-star',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -107,6 +110,10 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconEyeClose {...style} />
       ) : name === IconName['icon-warning'] ? (
         <IconWarning {...style} />
+      ) : name === IconName['icon-trophy'] ? (
+        <IconTrophy {...style} />
+      ) : name === IconName['icon-trophy-star'] ? (
+        <IconTrophyStar {...style} />
       ) : null}
     </View>
   );

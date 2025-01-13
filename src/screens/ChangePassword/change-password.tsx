@@ -1,11 +1,12 @@
 import React, {useMemo, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard-dissmiss-view';
 import {theme} from '../../hooks/theme/theme';
 import {Input} from '../../component/input/input';
 import {Icon, IconName} from '../../component/icon/icon';
+import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 
 const {colors, space} = theme;
 
@@ -16,11 +17,25 @@ export const ChangePassword = () => {
   const [newPass, setNewPass] = useState<string>('');
   const [retypePass, setRetypePass] = useState<string>('');
 
-  const checkCurrPass = useMemo(() => {}, [currPass]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const checkNewPass = useMemo(() => {}, [newPass]);
+  const checkCurrPass = useMemo(() => {
+    // Call api
+    return true;
+  }, [currPass]);
 
-  const checkRetypePass = useMemo(() => {}, [newPass, retypePass]);
+  const checkNewPass = useMemo(() => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+    return regex.test(newPass);
+  }, [newPass]);
+
+  const checkRetypePass = useMemo(() => {
+    return newPass === retypePass;
+  }, [newPass, retypePass]);
+
+  const disable = useMemo(() => {
+    return !(checkCurrPass && checkNewPass && checkRetypePass);
+  }, [checkCurrPass, checkNewPass, checkRetypePass]);
 
   const handleCurrPassChange = (value: string) => {
     setCurrPass(value);
@@ -34,11 +49,17 @@ export const ChangePassword = () => {
     setRetypePass(value);
   };
 
+  const handleChangePress = () => {
+    // Call api
+    setIsLoading(true);
+  };
+
   return (
     <KeyboardDissMissView>
       <View style={styles.container}>
         <Header title="Change your password" />
         <ScrollView>
+          <LoadingSpinner isVisible={isLoading} />
           <View style={styles.inputWrapper}>
             <Text style={styles.text}>Your current password</Text>
             <Input
@@ -47,6 +68,14 @@ export const ChangePassword = () => {
               value={currPass}
               onChangeText={handleCurrPassChange}
             />
+            {!checkCurrPass && currPass.length > 0 && (
+              <View style={styles.warningWrapper}>
+                <Icon name={IconName['icon-warning']} style={styles.icon} />
+                <Text style={styles.warningText}>
+                  Your current password is wrong.
+                </Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.inputWrapper}>
@@ -57,6 +86,17 @@ export const ChangePassword = () => {
               value={newPass}
               onChangeText={handleNewPassChange}
             />
+            {!checkNewPass && newPass.length > 0 && (
+              <View style={styles.warningWrapper2}>
+                <View style={styles.iconWrapper}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                </View>
+                <Text style={styles.warningText}>
+                  At least one lowercase, one uppercase, one digit, one special
+                  character, and 6+ characters long.
+                </Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.inputWrapper}>
@@ -67,8 +107,20 @@ export const ChangePassword = () => {
               value={retypePass}
               onChangeText={handleRetypePassChange}
             />
-            <Icon name={IconName['icon-warning']} style={styles.icon} />
+            {!checkRetypePass && retypePass.length > 0 && (
+              <View style={styles.warningWrapper}>
+                <Icon name={IconName['icon-warning']} style={styles.icon} />
+                <Text style={styles.warningText}>Passwords do not match!</Text>
+              </View>
+            )}
           </View>
+
+          <TouchableOpacity
+            style={[styles.btnWrapper, disable && styles.btnDisable]}
+            disabled={disable}
+            onPress={handleChangePress}>
+            <Text style={styles.btnText}>Change my password</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </KeyboardDissMissView>
@@ -79,6 +131,46 @@ const createStyle = () =>
   StyleSheet.create({
     container: {
       flex: 1,
+    },
+    btnWrapper: {
+      marginTop: 20,
+      backgroundColor: colors.header,
+      alignSelf: 'flex-start',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 8,
+      elevation: 4,
+      marginHorizontal: space.marginHorizontalBtn,
+    },
+    btnDisable: {
+      opacity: 0.6,
+    },
+    btnText: {
+      textAlign: 'left',
+      fontSize: 16,
+      color: colors.white,
+    },
+    iconWrapper: {
+      marginTop: -6,
+      height: '100%',
+    },
+    warningText: {
+      textAlign: 'left',
+      marginLeft: 3,
+      fontSize: 14,
+      lineHeight: 16,
+      color: colors.warning,
+      flex: 1,
+    },
+    warningWrapper: {
+      marginTop: 4,
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    warningWrapper2: {
+      marginTop: 8,
+      alignItems: 'center',
+      flexDirection: 'row',
     },
     icon: {
       height: 20,

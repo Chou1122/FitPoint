@@ -43,6 +43,6 @@ export enum Gender {
 }
 
 export const GenderText = {
-    [Gender.Male]: 'Nam',
-    [Gender.Female]: 'Nữ'
+    [Gender.Male]: 'Male',
+    [Gender.Female]: 'Female'
 }

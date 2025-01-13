@@ -42,6 +42,8 @@ export const AccountInfo = () => {
   const [timeExp, setTimeExp] = useState<number | string>(4);
   const [memberShip, setMemberShip] = useState(1);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const styles = useMemo(() => createStyle(rank), [rank]);
 
   useEffect(() => {
@@ -58,12 +60,17 @@ export const AccountInfo = () => {
 
   const handleEditPress = () => {};
 
+  const handleLogout = () => {
+    setIsLoading(true);
+  };
+
   return (
     <View style={styles.contanier}>
       <Header btnGoBack={false} title="My Infomation" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
+        <LoadingSpinner isVisible={isLoading} />
         <ScrollView>
           <View style={styles.topInfoWrapper}>
             {memberShip && <View style={styles.topBackgroundMember} />}
@@ -180,6 +187,12 @@ export const AccountInfo = () => {
             </TouchableOpacity>
           </View>
 
+          <View style={styles.bottomBtnWrapper}>
+            <TouchableOpacity style={styles.btnLogout} onPress={handleLogout}>
+              <Text style={styles.textChangePass}>Log out</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.emptyFooter} />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -214,6 +227,15 @@ const createStyle = (rank: RankGym) =>
     iconLabel2: {
       height: space.iconLabelInfo2,
       width: space.iconLabelInfo2,
+    },
+    btnLogout: {
+      backgroundColor: colors.blue2,
+      borderRadius: 8,
+      paddingVertical: 12,
+      alignSelf: 'flex-start',
+      elevation: 4,
+      width: '100%',
+      opacity: 0.9,
     },
     btnChangePass: {
       backgroundColor: colors.blue2,

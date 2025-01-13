@@ -16,6 +16,7 @@ import {MainStack} from './src/routes/main.navigation';
 import {Icon, IconName} from './src/component/icon/icon';
 import {CustomText as Text} from './src/component/text-custom/text-custom';
 import {InfoStack} from './src/routes/info.navigation';
+import {EventStack} from './src/routes/event.navigaton';
 
 const {space, colors, font} = theme;
 
@@ -37,6 +38,8 @@ function MainTabs() {
             iconName = IconName['icon-home'];
           } else if (route.name === 'Profile') {
             iconName = IconName['icon-profile'];
+          } else if (route.name === 'Event') {
+            iconName = IconName['icon-trophy-star'];
           }
 
           return (
@@ -67,6 +70,7 @@ function MainTabs() {
         tabBarInactiveTintColor: colors.gray3,
       })}>
       <Tab.Screen name="Home" component={MainStack} />
+      <Tab.Screen name="Event" component={EventStack} />
       <Tab.Screen name="Profile" component={InfoStack} />
     </Tab.Navigator>
   );
@@ -77,6 +81,10 @@ function App(): React.JSX.Element {
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
   const checkFirstLaunch = async () => {
+    setInitialRoute('Login');
+
+    return;
+
     try {
       const firstValue = await AsyncStorage.getItem('first-time-use');
       if (firstValue === null || firstValue === 'false') {

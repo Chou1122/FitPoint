@@ -10,11 +10,13 @@ type TabParamList = {
   RecordResult: undefined;
   Info: undefined;
   ChangePassword: undefined;
+  ScreenEvent: undefined;
 };
 
 // Stack navigation parameter list
 type StackParamList = {
   MainTab: undefined;
+  Event: undefined;
   IntroScreen: undefined;
   Login: undefined;
   Profile: undefined;

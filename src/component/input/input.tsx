@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import {
+  ImageStyle,
+  StyleProp,
   StyleSheet,
   TextInput,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewProps,
+  ViewStyle,
 } from 'react-native';
 import {theme} from '../../hooks/theme/theme';
 import {Icon, IconName} from '../icon/icon';
@@ -12,18 +16,20 @@ import {Icon, IconName} from '../icon/icon';
 const {colors} = theme;
 
 interface InputProps {
-  style?: ViewProps;
+  style?: StyleProp<ViewStyle | TextStyle | ImageStyle>;
   placeholder?: string;
   multiline?: boolean;
   editable?: boolean;
   value?: string;
   isPassword?: boolean;
   keyboardType?: any;
+  inputStyle?: StyleProp<ViewStyle | TextStyle | ImageStyle>;
   onChangeText?: (value: string) => void;
 }
 
 export const Input = ({
   style,
+  inputStyle,
   placeholder,
   multiline = false,
   editable = true,
@@ -32,10 +38,9 @@ export const Input = ({
   keyboardType = 'default',
   onChangeText,
 }: InputProps) => {
-  const styles = createStyle(style, editable, multiline);
+  const styles = createStyle(style, editable, multiline, inputStyle);
 
   const [valueText, setValueText] = useState<string>(value);
-  const [isSecure, setIsSecure] = useState<boolean>(isPassword);
   const [isShowPass, setIsShowPass] = useState<boolean>(isPassword);
 
   const handleTextChange = (value: string) => {
@@ -77,9 +82,10 @@ export const Input = ({
 };
 
 const createStyle = (
-  style?: ViewProps,
+  style?: StyleProp<any>,
   editable?: boolean,
   multiline?: boolean,
+  inputStyle?: StyleProp<any>,
 ) =>
   StyleSheet.create({
     icon: {
@@ -108,5 +114,6 @@ const createStyle = (
       color: colors.black,
       paddingRight: 8,
       flex: 1,
+      ...inputStyle,
     },
   });

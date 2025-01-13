@@ -7,9 +7,9 @@ export enum Nation {
 }
 
 export const NationText = {
-    [Nation.VietNam]: "Việt Nam",
-    [Nation.China]: "Trung Quốc",
-    [Nation.Japan]: "Nhật Bản",
-    [Nation.America]: "Mỹ",
-    [Nation.Russia]: 'Liên bang Nga'
+    [Nation.VietNam]: "Viet Nam",
+    [Nation.China]: "China",
+    [Nation.Japan]: "Japan",
+    [Nation.America]: "America",
+    [Nation.Russia]: 'Russia'
 }

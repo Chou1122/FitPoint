@@ -23,6 +23,9 @@ export const theme = {
     bad: '#FF9800',
     veryBad: '#D32F2F',
     warning: '#FF0000',
+    white0d4: 'rgba(255, 255, 255, 0.4)',
+    white0d6: 'rgba(255,255,255,0.6)',
+    white0d8: 'rgba(255,255,255,0.8)',
   },
   space: {
     marginBottomBtn: 16,

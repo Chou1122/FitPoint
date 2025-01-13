@@ -8,10 +8,11 @@ const {colors, font, space} = theme;
 interface LogoProps {
   theme?: 'dark' | 'light';
   size?: 'small' | 'normal' | 'big' | 'giant';
+  opacity?: number;
 }
 
-export const Logo = ({theme = 'dark', size = 'normal'}: LogoProps) => {
-  const styles = createStyle(theme, size);
+export const Logo = ({theme = 'dark', size = 'normal', opacity}: LogoProps) => {
+  const styles = createStyle(theme, size, opacity);
 
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ export const Logo = ({theme = 'dark', size = 'normal'}: LogoProps) => {
 const createStyle = (
   theme: 'dark' | 'light',
   size: 'small' | 'normal' | 'big' | 'giant',
+  opacity?: number,
 ) =>
   StyleSheet.create({
     container: {
@@ -36,6 +38,7 @@ const createStyle = (
       borderWidth:
         size == 'normal' ? 4 : size == 'small' ? 3 : size == 'big' ? 5 : 6,
       borderColor: theme === 'dark' ? colors.black : colors.white,
+      opacity: opacity,
     },
     icon: {
       height:
