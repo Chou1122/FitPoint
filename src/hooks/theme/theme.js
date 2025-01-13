@@ -16,11 +16,13 @@ export const theme = {
     gray2: '#b5b3b3',
     gray3: '#a5a4a4',
     yellow: '#ffe403',
+    yellow2: '#fcd11e',
     veryGood: '#4CAF50',
     good: '#8BC34A',
     neutral: '#ebb102',
     bad: '#FF9800',
     veryBad: '#D32F2F',
+    warning: '#FF0000',
   },
   space: {
     marginBottomBtn: 16,

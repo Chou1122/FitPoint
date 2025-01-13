@@ -20,10 +20,15 @@ import {
   rankTheme,
 } from '../../consts/app.const';
 import {Nation, NationText} from '../../consts/nation.const';
+import LottieView from 'lottie-react-native';
+import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
+import useAppNavigation from '../../hooks/navigation/use-navigation';
 
 const {space, colors, font} = theme;
 
 export const AccountInfo = () => {
+  const navigation = useAppNavigation();
+
   const [name, setName] = useState('Phạm Hồng Minh');
   const [rank, setRank] = useState<RankGym>(RankGym.Expert);
 
@@ -35,6 +40,7 @@ export const AccountInfo = () => {
   );
   const [nation, setNation] = useState<Nation>(Nation.VietNam);
   const [timeExp, setTimeExp] = useState<number | string>(4);
+  const [memberShip, setMemberShip] = useState(1);
 
   const styles = useMemo(() => createStyle(rank), [rank]);
 
@@ -42,9 +48,11 @@ export const AccountInfo = () => {
     //Call api
   }, []);
 
-  const handleChangePassPress = () => {};
+  const handleChangePassPress = () => {
+    navigation.navigate('ChangePassword');
+  };
 
-  const handleReportPress = () => {};
+  const handleBuyMembershipPress = () => {};
 
   const handleChangeName = () => {};
 
@@ -58,6 +66,7 @@ export const AccountInfo = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <ScrollView>
           <View style={styles.topInfoWrapper}>
+            {memberShip && <View style={styles.topBackgroundMember} />}
             <View style={styles.avtWrapper}>
               <Avatar
                 height={space.avtInfo}
@@ -77,6 +86,14 @@ export const AccountInfo = () => {
               <View style={styles.rankCon}>
                 <Text style={styles.rankText}>{rankText[rank]}</Text>
               </View>
+              {memberShip && (
+                <LottieView
+                  source={require('../../assets/lotties/membership-2.json')}
+                  autoPlay
+                  loop
+                  style={styles.animation}
+                />
+              )}
             </View>
           </View>
 
@@ -157,9 +174,9 @@ export const AccountInfo = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.btnChangePass}
-              onPress={handleReportPress}>
-              <Text style={styles.textChangePass}>Report Bug</Text>
+              style={styles.btnBuyMember}
+              onPress={handleBuyMembershipPress}>
+              <Text style={styles.textChangePass}>Get Membership</Text>
             </TouchableOpacity>
           </View>
 
@@ -172,6 +189,10 @@ export const AccountInfo = () => {
 
 const createStyle = (rank: RankGym) =>
   StyleSheet.create({
+    animation: {
+      height: 52,
+      width: 52,
+    },
     contanier: {
       flex: 1,
     },
@@ -207,13 +228,30 @@ const createStyle = (rank: RankGym) =>
       color: colors.white,
       fontSize: 16,
     },
+    btnBuyMember: {
+      backgroundColor: colors.yellow2,
+      borderRadius: 8,
+      paddingVertical: 12,
+      alignSelf: 'flex-start',
+      elevation: 4,
+      width: '49%',
+      opacity: 0.9,
+    },
+    topBackgroundMember: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.yellow2,
+      opacity: 0.4,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
     topInfoWrapper: {
       backgroundColor: colors.white,
       marginTop: 20,
       marginHorizontal: space.marginHorizontalBtn,
       borderRadius: 12,
       elevation: 8,
-      paddingBottom: 12,
     },
     infoWrapper: {
       flexDirection: 'column',
@@ -284,6 +322,7 @@ const createStyle = (rank: RankGym) =>
       marginTop: 8,
       justifyContent: 'center',
       alignItems: 'center',
+      marginBottom: 12,
     },
     rankCon: {
       backgroundColor: rankTheme[rank].backgroundColor,

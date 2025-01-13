@@ -20,6 +20,9 @@ import {IconAddress} from './icons-list/icon-address';
 import {IconGender} from './icons-list/icon-gender';
 import {IconTime} from './icons-list/icon-time';
 import {IconEarth} from './icons-list/icon-earth';
+import {IconEyeOpen} from './icons-list/icon-eye-open';
+import {IconEyeClose} from './icons-list/icon-eye.close';
+import {IconWarning} from './icons-list/icon-warning';
 
 export enum IconName {
   'icon-back',
@@ -41,6 +44,9 @@ export enum IconName {
   'icon-gender',
   'icon-time',
   'icon-earth',
+  'icon-eye-open',
+  'icon-eye-close',
+  'icon-warning',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -95,6 +101,12 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconTime {...style} />
       ) : name === IconName['icon-earth'] ? (
         <IconEarth {...style} />
+      ) : name === IconName['icon-eye-open'] ? (
+        <IconEyeOpen {...style} />
+      ) : name === IconName['icon-eye-close'] ? (
+        <IconEyeClose {...style} />
+      ) : name === IconName['icon-warning'] ? (
+        <IconWarning {...style} />
       ) : null}
     </View>
   );

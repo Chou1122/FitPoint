@@ -9,6 +9,7 @@ type TabParamList = {
   SportSelection: undefined;
   RecordResult: undefined;
   Info: undefined;
+  ChangePassword: undefined;
 };
 
 // Stack navigation parameter list
@@ -20,6 +21,7 @@ type StackParamList = {
   SportRecording: undefined;
   SportDetail: SportDetailProps;
   SportTutorial: undefined;
+  ChangePassword: undefined;
 };
 
 // Define the combined navigation prop
