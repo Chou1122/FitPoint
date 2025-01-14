@@ -100,9 +100,9 @@ export const ChangePassword = () => {
           </View>
 
           <View style={styles.inputWrapper}>
-            <Text style={styles.text}>Retype your new password</Text>
+            <Text style={styles.text}>Confirm your new password</Text>
             <Input
-              placeholder="Retype your new password"
+              placeholder="Confirm your new password"
               isPassword={true}
               value={retypePass}
               onChangeText={handleRetypePassChange}
