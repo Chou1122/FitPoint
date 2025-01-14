@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
+  Dimensions,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -20,6 +21,9 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
+
+const trueUN = 'admin';
+const truePW = 'aB123@';
 
 export const Login = () => {
   const navigation = useAppNavigation();
@@ -42,17 +46,22 @@ export const Login = () => {
 
   const handleLoginPress = async () => {
     setIsLoading(true);
+    // Call API
     setTimeout(() => {
       setIsLoading(false);
-      setWrongInfo(true);
-      navigation.navigate('MainTab');
+      if (password === truePW && userName === trueUN) {
+        navigation.navigate('MainTab');
+      } else {
+        setWrongInfo(true);
+      }
     }, 3000);
-    // Call API
   };
 
   const handleForgotPress = () => {};
 
-  const handleSignUpPress = () => {};
+  const handleSignUpPress = () => {
+    navigation.navigate('SignUp');
+  };
 
   const disabled = useMemo(() => {
     return !(userName && password);
@@ -76,7 +85,8 @@ export const Login = () => {
         </View>
         <KeyboardAvoidingView
           style={styles.scrlWrapper}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
           <ScrollView style={styles.scrl}>
             <View style={styles.contentWrapper1}>
               <Logo size={'giant'} opacity={0.8} />
@@ -214,7 +224,7 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   btnDisabled: {
-    opacity: 0.8,
+    opacity: 0.4,
   },
   btnForgot: {
     marginTop: -8,
@@ -299,8 +309,8 @@ const styles = StyleSheet.create({
   },
   imgWrapper: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     top: 0,
     left: 0,
     pointerEvents: 'none',
