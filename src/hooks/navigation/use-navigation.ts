@@ -24,6 +24,8 @@ type StackParamList = {
   SportDetail: SportDetailProps;
   SportTutorial: undefined;
   ChangePassword: undefined;
+  ForgetPassword: undefined;
+  SignUp: undefined;
 };
 
 // Define the combined navigation prop

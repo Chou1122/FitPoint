@@ -17,6 +17,8 @@ import {Icon, IconName} from './src/component/icon/icon';
 import {CustomText as Text} from './src/component/text-custom/text-custom';
 import {InfoStack} from './src/routes/info.navigation';
 import {EventStack} from './src/routes/event.navigaton';
+import {ForgetPassword} from './src/screens/ForgetPassword/forget-password';
+import {SignUp} from './src/screens/SignUp/sign-up';
 
 const {space, colors, font} = theme;
 
@@ -113,10 +115,11 @@ function App(): React.JSX.Element {
         screenOptions={{headerShown: false}}>
         {/* Before Login */}
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
         {/* After Login */}
         <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="MainTab" component={MainTabs} />
-
+        <Stack.Screen name="SignUp" component={SignUp} />
         {/* @ts-ignore */}
         <Stack.Screen name="SportDetail" component={SportDetail} />
         <Stack.Screen name="SportTutorial" component={SportTutorial} />

@@ -62,6 +62,9 @@ export const AccountInfo = () => {
 
   const handleLogout = () => {
     setIsLoading(true);
+    setTimeout(() => {
+      navigation.navigate('Login');
+    }, 1000);
   };
 
   return (

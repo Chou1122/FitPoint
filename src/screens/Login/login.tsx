@@ -14,12 +14,16 @@ import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Input} from '../../component/input/input';
 import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard-dissmiss-view';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
+import {Icon, IconName} from '../../component/icon/icon';
+import useAppNavigation from '../../hooks/navigation/use-navigation';
 
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
 export const Login = () => {
+  const navigation = useAppNavigation();
+
   const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [wrongInfo, setWrongInfo] = useState<boolean>(false);
@@ -38,6 +42,11 @@ export const Login = () => {
 
   const handleLoginPress = async () => {
     setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setWrongInfo(true);
+      navigation.navigate('MainTab');
+    }, 3000);
     // Call API
   };
 
@@ -92,6 +101,15 @@ export const Login = () => {
                 onChangeText={handlePasswordChange}
               />
 
+              {wrongInfo && (
+                <View style={styles.warningWrapper}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.textWarning}>
+                    Wrong username or password!
+                  </Text>
+                </View>
+              )}
+
               <TouchableOpacity
                 onPress={handleForgotPress}
                 style={styles.btnForgot}>
@@ -129,6 +147,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  warningWrapper: {
+    flexDirection: 'row',
+    width: '100%',
+    paddingLeft: 4,
+    marginTop: -12,
+    opacity: 0.8,
+  },
+  textWarning: {
+    marginLeft: 4,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.warning2,
+  },
+  icon: {
+    height: 20,
+    width: 20,
+    color: colors.warning2,
   },
   btnSignUp: {
     borderRadius: 100,
@@ -181,6 +217,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   btnForgot: {
+    marginTop: -8,
     alignSelf: 'flex-end',
     paddingRight: 8,
   },
@@ -188,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     fontWeight: 'bold',
-    color: colors.black,
+    color: colors.blue3,
     opacity: 0.8,
   },
   textLogin: {
