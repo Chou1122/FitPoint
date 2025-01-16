@@ -1,14 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Modal, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 interface PopupProps {
   children: any;
   isVisible: boolean;
   onClose?: () => void;
+  animationType?: 'slide' | 'none';
 }
 
-export const Popup = ({children, isVisible, onClose}: PopupProps) => {
+export const Popup = ({
+  children,
+  isVisible,
+  onClose,
+  animationType = 'slide',
+}: PopupProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(isVisible);
+
+  useEffect(() => {
+    setModalVisible(isVisible);
+  }, [isVisible]);
 
   const handleClose = () => {
     setModalVisible(false);
@@ -17,7 +27,7 @@ export const Popup = ({children, isVisible, onClose}: PopupProps) => {
 
   return (
     <Modal
-      animationType="slide"
+      animationType={animationType}
       transparent={true}
       visible={modalVisible}
       onRequestClose={handleClose}>

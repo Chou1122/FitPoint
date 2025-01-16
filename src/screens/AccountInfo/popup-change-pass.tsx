@@ -11,9 +11,9 @@ interface Props {
   content?: string;
 }
 
-export const PopUpSuccessChangePass = ({
+export const PopUpSuccessChangePass2 = ({
   onPress,
-  content = 'Password reset successfully!',
+  content = 'Password change successfully!',
 }: Props) => {
   const handlePress = () => {
     onPress?.();
@@ -31,7 +31,7 @@ export const PopUpSuccessChangePass = ({
       <Text style={styles.textContent}>{content}</Text>
 
       <TouchableOpacity style={styles.btn} onPress={handlePress}>
-        <Text style={styles.btnText}>Login now</Text>
+        <Text style={styles.btnText}>Close</Text>
       </TouchableOpacity>
     </View>
   );

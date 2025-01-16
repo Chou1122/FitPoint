@@ -7,11 +7,13 @@ import {theme} from '../../hooks/theme/theme';
 import {Input} from '../../component/input/input';
 import {Icon, IconName} from '../../component/icon/icon';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
+import useAppNavigation from '../../hooks/navigation/use-navigation';
 
 const {colors, space} = theme;
 
 export const ChangePassword = () => {
   const styles = createStyle();
+  const navigation = useAppNavigation();
 
   const [currPass, setCurrPass] = useState<string>('');
   const [newPass, setNewPass] = useState<string>('');
@@ -52,6 +54,13 @@ export const ChangePassword = () => {
   const handleChangePress = () => {
     // Call api
     setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      // @ts-ignore
+      navigation.navigate('Info', {
+        popupTitle: 'Password change successfully!',
+      });
+    }, 2000);
   };
 
   return (

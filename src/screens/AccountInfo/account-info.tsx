@@ -23,11 +23,27 @@ import {Nation, NationText} from '../../consts/nation.const';
 import LottieView from 'lottie-react-native';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {Popup} from '../../component/popup/popup';
+import {PopUpSuccessChangePass2} from './popup-change-pass';
+import {useRoute} from '@react-navigation/native';
 
 const {space, colors, font} = theme;
 
 export const AccountInfo = () => {
   const navigation = useAppNavigation();
+
+  const route = useRoute();
+  const params = route.params;
+  // @ts-ignore
+  const popupTitle = params?.popupTitle;
+
+  useEffect(() => {
+    if (popupTitle) {
+      setShowPopup(true);
+      return;
+    }
+    setShowPopup(false);
+  }, [popupTitle]);
 
   const [name, setName] = useState('Phạm Hồng Minh');
   const [rank, setRank] = useState<RankGym>(RankGym.Expert);
@@ -41,6 +57,8 @@ export const AccountInfo = () => {
   const [nation, setNation] = useState<Nation>(Nation.VietNam);
   const [timeExp, setTimeExp] = useState<number | string>(4);
   const [memberShip, setMemberShip] = useState(1);
+
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -67,9 +85,19 @@ export const AccountInfo = () => {
     }, 1000);
   };
 
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <View style={styles.contanier}>
       <Header btnGoBack={false} title="My Infomation" />
+      <Popup isVisible={showPopup}>
+        <PopUpSuccessChangePass2
+          onPress={handleClosePopup}
+          content={popupTitle}
+        />
+      </Popup>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>

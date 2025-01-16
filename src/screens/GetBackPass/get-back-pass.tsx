@@ -39,7 +39,10 @@ export const GetBackPass = () => {
   };
 
   const handleLoginPress = async () => {
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   };
 
   const handleUpdatePress = () => {
@@ -47,7 +50,13 @@ export const GetBackPass = () => {
 
     setTimeout(() => {
       setIsLoading(false);
-      navigation.navigate('Login');
+
+      navigation.reset({
+        index: 0,
+        routes: [
+          {name: 'Login', params: {popupTitle: 'Password reset successfully!'}},
+        ],
+      });
     }, 2000);
   };
 

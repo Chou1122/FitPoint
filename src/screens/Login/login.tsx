@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -19,6 +19,7 @@ import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {Popup} from '../../component/popup/popup';
 import {PopUpSuccessChangePass} from './popup-success-change-pass';
+import {useRoute} from '@react-navigation/native';
 
 const {colors} = theme;
 
@@ -30,11 +31,26 @@ const truePW = 'aB123@';
 export const Login = () => {
   const navigation = useAppNavigation();
 
+  const route = useRoute();
+  const params = route.params;
+  // @ts-ignore
+  const popupTitle = params?.popupTitle;
+
+  useEffect(() => {
+    if (popupTitle) {
+      handleSetShowPopup(true);
+      return;
+    }
+    handleSetShowPopup(false);
+  }, [popupTitle]);
+
   const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [wrongInfo, setWrongInfo] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const handleUserNameChange = (value: string) => {
     setUserName(value);
@@ -67,6 +83,10 @@ export const Login = () => {
     navigation.navigate('SignUp');
   };
 
+  const handleSetShowPopup = (value: boolean) => {
+    setShowPopup(value);
+  };
+
   const disabled = useMemo(() => {
     return !(userName && password);
   }, [userName, password]);
@@ -75,8 +95,11 @@ export const Login = () => {
     <KeyboardDissMissView>
       <View style={styles.contanier}>
         <LoadingSpinner isVisible={isLoading} />
-        <Popup isVisible={true}>
-          <PopUpSuccessChangePass />
+        <Popup isVisible={showPopup} animationType="none">
+          <PopUpSuccessChangePass
+            onPress={() => handleSetShowPopup(false)}
+            content={popupTitle}
+          />
         </Popup>
         <View style={styles.imgWrapper}>
           <View style={styles.imgBackGround} />

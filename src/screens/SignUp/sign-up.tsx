@@ -81,7 +81,15 @@ export const SignUp = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      navigation.navigate('Login');
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Login',
+            params: {popupTitle: 'Account registration successfully!'},
+          },
+        ],
+      });
     }, 3000);
     // Call API
   };

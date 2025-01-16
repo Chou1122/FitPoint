@@ -47,13 +47,16 @@ export const EnterOTP = () => {
       if (otp != trueOTP) {
         setWrongOtp(true);
       } else {
-        navigation.navigate('GetBackPass');
+        navigation.replace('GetBackPass');
       }
     }, 3000);
   };
 
   const handleLoginPress = () => {
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   };
 
   const handleOTPChange = (value: string) => {
