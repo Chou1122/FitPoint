@@ -89,8 +89,8 @@ function App(): React.JSX.Element {
   };
 
   const checkFirstLaunch = async () => {
-    setInitialRoute('GetBackPass');
-    return;
+    // setInitialRoute('GetBackPass');
+    // return;
 
     try {
       const firstValue = await AsyncStorage.getItem('first-time-use');

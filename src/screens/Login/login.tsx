@@ -17,6 +17,8 @@ import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {Popup} from '../../component/popup/popup';
+import {PopUpSuccessChangePass} from './popup-success-change-pass';
 
 const {colors} = theme;
 
@@ -73,6 +75,9 @@ export const Login = () => {
     <KeyboardDissMissView>
       <View style={styles.contanier}>
         <LoadingSpinner isVisible={isLoading} />
+        <Popup isVisible={true}>
+          <PopUpSuccessChangePass />
+        </Popup>
         <View style={styles.imgWrapper}>
           <View style={styles.imgBackGround} />
           <Image
