@@ -46,6 +46,8 @@ export const EnterOTP = () => {
       setIsLoading(false);
       if (otp != trueOTP) {
         setWrongOtp(true);
+      } else {
+        navigation.navigate('GetBackPass');
       }
     }, 3000);
   };

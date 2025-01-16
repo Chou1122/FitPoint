@@ -22,52 +22,43 @@ const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
-const trueUN = 'admin';
-const truePW = 'aB123@';
-
 export const GetBackPass = () => {
   const navigation = useAppNavigation();
 
-  const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [wrongInfo, setWrongInfo] = useState<boolean>(false);
+  const [cPassword, setCPassword] = useState<string>('');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleUserNameChange = (value: string) => {
-    setUserName(value);
-    setWrongInfo(false);
-  };
-
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    setWrongInfo(false);
+  };
+
+  const handleCPasswordChange = (value: string) => {
+    setCPassword(value);
   };
 
   const handleLoginPress = async () => {
+    navigation.navigate('Login');
+  };
+
+  const handleUpdatePress = () => {
     setIsLoading(true);
-    // Call API
+
     setTimeout(() => {
       setIsLoading(false);
-      if (password === truePW && userName === trueUN) {
-        navigation.navigate('MainTab');
-      } else {
-        setWrongInfo(true);
-      }
-    }, 3000);
-  };
-
-  const handleForgotPress = () => {
-    navigation.navigate('ForgetPassword');
-  };
-
-  const handleSignUpPress = () => {
-    navigation.navigate('SignUp');
+      navigation.navigate('Login');
+    }, 2000);
   };
 
   const disabled = useMemo(() => {
-    return !(userName && password);
-  }, [userName, password]);
+    return password !== cPassword;
+  }, [password, cPassword]);
+
+  const checkNewPass = useMemo(() => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+    return regex.test(password);
+  }, [password]);
 
   return (
     <KeyboardDissMissView>
@@ -93,17 +84,10 @@ export const GetBackPass = () => {
             <View style={styles.contentWrapper1}>
               <Logo size={'giant'} opacity={0.8} />
               <Text style={styles.textName}>PerfectFit</Text>
-              <Text style={styles.textLabel}>Welcome back!</Text>
+              <Text style={styles.textLabel}>Set New Password</Text>
             </View>
 
             <View style={styles.contentWrapper2}>
-              <Input
-                value={userName}
-                style={styles.input}
-                placeholder="Username"
-                inputStyle={styles.inputStyle}
-                onChangeText={handleUserNameChange}
-              />
               <Input
                 value={password}
                 style={styles.input}
@@ -113,32 +97,51 @@ export const GetBackPass = () => {
                 onChangeText={handlePasswordChange}
               />
 
-              {wrongInfo && (
+              {!checkNewPass && password && (
                 <View style={styles.warningWrapper}>
                   <Icon name={IconName['icon-warning']} style={styles.icon} />
                   <Text style={styles.textWarning}>
-                    Wrong username or password!
+                    Password must have at least 1 lowercase, 1 uppercase, 1
+                    number, 1 special character, and be 6+ characters long.
                   </Text>
                 </View>
               )}
 
+              <Input
+                value={cPassword}
+                style={styles.input}
+                placeholder="Confirm password"
+                isPassword={true}
+                inputStyle={styles.inputStyle}
+                onChangeText={handleCPasswordChange}
+              />
+
+              {disabled && password && cPassword && (
+                <View style={styles.warningWrapper}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.textWarning}>Password do not match!</Text>
+                </View>
+              )}
+
               <TouchableOpacity
-                style={[styles.btnLogin, disabled && styles.btnDisabled]}
+                style={[styles.btnUpdate, disabled && styles.btnDisabled]}
                 disabled={disabled}
-                onPress={handleLoginPress}>
-                <Text style={styles.textLogin}>Login</Text>
+                onPress={handleUpdatePress}>
+                <Text style={styles.textLogin}>Update my password</Text>
               </TouchableOpacity>
 
               <View style={styles.newUserWrapper}>
                 <View style={styles.line} />
-                <Text style={styles.newUserText}>Or New user?</Text>
+                <Text style={styles.newUserText}>
+                  Remembered your password?
+                </Text>
                 <View style={styles.line} />
               </View>
 
               <TouchableOpacity
-                style={styles.btnSignUp}
-                onPress={handleSignUpPress}>
-                <Text style={styles.textLogin}>Sign Up</Text>
+                style={styles.btnLogin}
+                onPress={handleLoginPress}>
+                <Text style={styles.textLogin}>Back to login</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -162,6 +165,8 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   textWarning: {
+    textAlign: 'left',
+    paddingRight: 16,
     marginLeft: 4,
     fontSize: 14,
     lineHeight: 20,
@@ -171,14 +176,6 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     color: colors.warning2,
-  },
-  btnSignUp: {
-    borderRadius: 100,
-    backgroundColor: colors.header,
-    width: '100%',
-    paddingVertical: 12,
-    elevation: 4,
-    marginBottom: 4,
   },
   infoWrapper: {
     position: 'absolute',
@@ -193,7 +190,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   btnLogin: {
-    marginTop: 40,
+    borderRadius: 100,
+    backgroundColor: colors.header,
+    width: '100%',
+    paddingVertical: 12,
+    elevation: 4,
+  },
+  btnUpdate: {
+    marginTop: 4,
     borderRadius: 100,
     backgroundColor: colors.header,
     width: '100%',
