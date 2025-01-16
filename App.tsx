@@ -82,21 +82,21 @@ function App(): React.JSX.Element {
   // Check is first time use app
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
-  const checkFirstLaunch = async () => {
+  const checkHasToken = () => {
     setInitialRoute('Login');
+  };
 
-    return;
-
+  const checkFirstLaunch = async () => {
     try {
       const firstValue = await AsyncStorage.getItem('first-time-use');
       if (firstValue === null || firstValue === 'false') {
         setInitialRoute('IntroScreen');
       } else {
-        setInitialRoute('MainTab');
+        checkHasToken();
       }
     } catch (error) {
       console.error('Lỗi khi kiểm tra AsyncStorage:', error);
-      setInitialRoute('MainTab');
+      checkHasToken();
     }
   };
 
@@ -116,10 +116,11 @@ function App(): React.JSX.Element {
         {/* Before Login */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+        <Stack.Screen name="SignUp" component={SignUp} />
         {/* After Login */}
         <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="MainTab" component={MainTabs} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+
         {/* @ts-ignore */}
         <Stack.Screen name="SportDetail" component={SportDetail} />
         <Stack.Screen name="SportTutorial" component={SportTutorial} />

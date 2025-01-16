@@ -22,7 +22,7 @@ const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
-export const ForgetPassword = () => {
+export const EnterOTP = () => {
   const navigation = useAppNavigation();
 
   const [email, setEmail] = useState<string>('');

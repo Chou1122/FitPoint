@@ -57,7 +57,9 @@ export const Login = () => {
     }, 3000);
   };
 
-  const handleForgotPress = () => {};
+  const handleForgotPress = () => {
+    navigation.navigate('ForgetPassword');
+  };
 
   const handleSignUpPress = () => {
     navigation.navigate('SignUp');
