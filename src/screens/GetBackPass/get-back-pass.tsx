@@ -22,35 +22,52 @@ const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
-export const ForgetPassword = () => {
+const trueUN = 'admin';
+const truePW = 'aB123@';
+
+export const GetBackPass = () => {
   const navigation = useAppNavigation();
 
-  const [email, setEmail] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [wrongInfo, setWrongInfo] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleEmailChange = (value: string) => {
-    setEmail(value);
+  const handleUserNameChange = (value: string) => {
+    setUserName(value);
+    setWrongInfo(false);
   };
 
-  const handleSendPress = async () => {
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setWrongInfo(false);
+  };
+
+  const handleLoginPress = async () => {
     setIsLoading(true);
     // Call API
     setTimeout(() => {
       setIsLoading(false);
-      // @ts-ignore
-      navigation.navigate('EnterOTP', {email: email});
+      if (password === truePW && userName === trueUN) {
+        navigation.navigate('MainTab');
+      } else {
+        setWrongInfo(true);
+      }
     }, 3000);
   };
 
-  const handleLoginPress = () => {
-    navigation.navigate('Login');
+  const handleForgotPress = () => {
+    navigation.navigate('ForgetPassword');
+  };
+
+  const handleSignUpPress = () => {
+    navigation.navigate('SignUp');
   };
 
   const disabled = useMemo(() => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return !regex.test(email);
-  }, [email]);
+    return !(userName && password);
+  }, [userName, password]);
 
   return (
     <KeyboardDissMissView>
@@ -76,47 +93,52 @@ export const ForgetPassword = () => {
             <View style={styles.contentWrapper1}>
               <Logo size={'giant'} opacity={0.8} />
               <Text style={styles.textName}>PerfectFit</Text>
-              <Text style={styles.textLabel}>Forgot password</Text>
+              <Text style={styles.textLabel}>Welcome back!</Text>
             </View>
 
             <View style={styles.contentWrapper2}>
-              <Text style={styles.textContent}>
-                Enter your email, and we will send an OTP code to your email to
-                reset your password.
-              </Text>
-
               <Input
-                value={email}
+                value={userName}
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Username"
                 inputStyle={styles.inputStyle}
-                onChangeText={handleEmailChange}
+                onChangeText={handleUserNameChange}
+              />
+              <Input
+                value={password}
+                style={styles.input}
+                placeholder="Password"
+                isPassword={true}
+                inputStyle={styles.inputStyle}
+                onChangeText={handlePasswordChange}
               />
 
-              {disabled && email && (
+              {wrongInfo && (
                 <View style={styles.warningWrapper}>
                   <Icon name={IconName['icon-warning']} style={styles.icon} />
-                  <Text style={styles.textWarning}>Your email is invalid!</Text>
+                  <Text style={styles.textWarning}>
+                    Wrong username or password!
+                  </Text>
                 </View>
               )}
 
               <TouchableOpacity
                 style={[styles.btnLogin, disabled && styles.btnDisabled]}
                 disabled={disabled}
-                onPress={handleSendPress}>
-                <Text style={styles.textLogin}>Recovery Password</Text>
+                onPress={handleLoginPress}>
+                <Text style={styles.textLogin}>Login</Text>
               </TouchableOpacity>
 
               <View style={styles.newUserWrapper}>
                 <View style={styles.line} />
-                <Text style={styles.newUserText}>Already have an account?</Text>
+                <Text style={styles.newUserText}>Or New user?</Text>
                 <View style={styles.line} />
               </View>
 
               <TouchableOpacity
                 style={styles.btnSignUp}
-                onPress={handleLoginPress}>
-                <Text style={styles.textLogin}>Login</Text>
+                onPress={handleSignUpPress}>
+                <Text style={styles.textLogin}>Sign Up</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -131,14 +153,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  textContent: {
-    fontSize: 16,
-    lineHeight: 20,
-    textAlign: 'left',
-    fontWeight: 'bold',
-    color: colors.black,
-    opacity: 0.72,
   },
   warningWrapper: {
     flexDirection: 'row',
@@ -179,6 +193,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   btnLogin: {
+    marginTop: 40,
     borderRadius: 100,
     backgroundColor: colors.header,
     width: '100%',

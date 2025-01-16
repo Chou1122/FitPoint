@@ -26,6 +26,8 @@ type StackParamList = {
   ChangePassword: undefined;
   ForgetPassword: undefined;
   SignUp: undefined;
+  EnterOTP: undefined;
+  GetBackPass: undefined;
 };
 
 // Define the combined navigation prop

@@ -19,6 +19,8 @@ import {InfoStack} from './src/routes/info.navigation';
 import {EventStack} from './src/routes/event.navigaton';
 import {ForgetPassword} from './src/screens/ForgetPassword/forget-password';
 import {SignUp} from './src/screens/SignUp/sign-up';
+import {EnterOTP} from './src/screens/EnterOTP/enter-otp';
+import {GetBackPass} from './src/screens/GetBackPass/get-back-pass';
 
 const {space, colors, font} = theme;
 
@@ -87,6 +89,9 @@ function App(): React.JSX.Element {
   };
 
   const checkFirstLaunch = async () => {
+    setInitialRoute('GetBackPass');
+    return;
+
     try {
       const firstValue = await AsyncStorage.getItem('first-time-use');
       if (firstValue === null || firstValue === 'false') {
@@ -117,6 +122,8 @@ function App(): React.JSX.Element {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="EnterOTP" component={EnterOTP} />
+        <Stack.Screen name="GetBackPass" component={GetBackPass} />
         {/* After Login */}
         <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="MainTab" component={MainTabs} />

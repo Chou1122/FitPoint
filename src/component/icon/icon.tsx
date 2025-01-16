@@ -24,6 +24,7 @@ import {IconEyeClose} from './icons-list/icon-eye.close';
 import {IconWarning} from './icons-list/icon-warning';
 import {IconTrophy} from './icons-list/icon-trophy';
 import {IconTrophyStar} from './icons-list/icon-trophy-star';
+import {IconSuccess} from './icons-list/icon-success';
 
 export enum IconName {
   'icon-back',
@@ -50,6 +51,7 @@ export enum IconName {
   'icon-warning',
   'icon-trophy',
   'icon-trophy-star',
+  'icon-success',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -114,6 +116,8 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconTrophy {...style} />
       ) : name === IconName['icon-trophy-star'] ? (
         <IconTrophyStar {...style} />
+      ) : name === IconName['icon-success'] ? (
+        <IconSuccess {...style} />
       ) : null}
     </View>
   );
