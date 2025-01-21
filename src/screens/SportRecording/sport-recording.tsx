@@ -87,6 +87,7 @@ export const SportRecording = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      // @ts-ignore
       navigation.navigate('MainTab', {
         screen: 'Home',
         params: {screen: 'RecordResult'},
