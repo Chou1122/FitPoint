@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -17,12 +18,20 @@ import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {useRoute} from '@react-navigation/native';
+import {API_URL} from '@env';
+import axios from 'axios';
 
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
 export const GetBackPass = () => {
+  const route = useRoute();
+  const params = route.params;
+  // @ts-ignore
+  const email = params?.email;
+
   const navigation = useAppNavigation();
 
   const [password, setPassword] = useState<string>('');
@@ -45,19 +54,36 @@ export const GetBackPass = () => {
     });
   };
 
-  const handleUpdatePress = () => {
+  const handleUpdatePress = async () => {
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-
-      navigation.reset({
-        index: 0,
-        routes: [
-          {name: 'Login', params: {popupTitle: 'Password reset successfully!'}},
-        ],
+    try {
+      const response = await axios.post(`${API_URL}/get-back-pass`, {
+        email: email,
+        newPassword: password,
       });
-    }, 2000);
+
+      if (response.status === 200) {
+        setIsLoading(false);
+
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Login',
+              params: {popupTitle: 'Password reset successfully!'},
+            },
+          ],
+        });
+      } else {
+        setIsLoading(false);
+        Alert.alert('Failed to send email. Please try again!');
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error sending email:', error);
+      Alert.alert('An error occurred. Please try again later.');
+    }
   };
 
   const disabled = useMemo(() => {

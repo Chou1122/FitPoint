@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -16,6 +17,8 @@ import {Input} from '../../component/input/input';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {API_URL} from '@env';
+import axios from 'axios';
 
 const {colors} = theme;
 
@@ -27,7 +30,6 @@ export const SignUp = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPass, setConfirmPass] = useState<string>('');
 
-  const [checkUserName, setCheckUserName] = useState<boolean>(true);
   const [checkEmail, setCheckEmail] = useState<boolean>(true);
   const [checkPassword, setCheckPassword] = useState<boolean>(true);
   const [checkCPassword, setCheckCPassword] = useState<boolean>(true);
@@ -79,7 +81,13 @@ export const SignUp = () => {
 
   const handleSignUpPress = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await axios.post(`${API_URL}/create-user`, {
+        userName: userName,
+        email: email,
+        password: password,
+      });
       setIsLoading(false);
       navigation.reset({
         index: 0,
@@ -90,8 +98,24 @@ export const SignUp = () => {
           },
         ],
       });
-    }, 3000);
-    // Call API
+    } catch (error: any) {
+      setIsLoading(false);
+
+      if (error.response) {
+        const statusCode = error.response.status;
+        const errorMessage = error.response.data.error;
+
+        if (statusCode === 400) {
+          Alert.alert('Username or Email already exit!');
+        } else {
+          Alert.alert('Something error. Please try again!');
+        }
+      } else if (error.request) {
+        Alert.alert('Can not connect to server');
+      } else {
+        Alert.alert('Error!');
+      }
+    }
   };
 
   const handleLoginPress = () => {

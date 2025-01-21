@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -20,13 +21,12 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {Popup} from '../../component/popup/popup';
 import {PopUpSuccessChangePass} from './popup-success-change-pass';
 import {useRoute} from '@react-navigation/native';
+import {API_URL} from '@env';
+import axios from 'axios';
 
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
-
-const trueUN = 'admin';
-const truePW = 'aB123@';
 
 export const Login = () => {
   const navigation = useAppNavigation();
@@ -64,15 +64,33 @@ export const Login = () => {
 
   const handleLoginPress = async () => {
     setIsLoading(true);
-    // Call API
-    setTimeout(() => {
+
+    try {
+      const response = await axios.post(`${API_URL}/login`, {
+        userName: userName,
+        password: password,
+      });
       setIsLoading(false);
-      if (password === truePW && userName === trueUN) {
-        navigation.navigate('MainTab');
-      } else {
+      navigation.navigate('MainTab');
+    } catch (error: any) {
+      setIsLoading(false);
+
+      if (error.response) {
         setWrongInfo(true);
+        const statusCode = error.response.status;
+        const errorMessage = error.response.data.error;
+
+        if (statusCode === 400) {
+          Alert.alert('Wrong username or password!');
+        } else {
+          Alert.alert('Something error. Please try again!');
+        }
+      } else if (error.request) {
+        Alert.alert('Can not connect to server');
+      } else {
+        Alert.alert('Error!');
       }
-    }, 3000);
+    }
   };
 
   const handleForgotPress = () => {

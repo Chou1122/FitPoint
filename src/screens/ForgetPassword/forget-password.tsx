@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -17,6 +18,8 @@ import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import axios from 'axios';
+import {API_URL} from '@env';
 
 const {colors} = theme;
 
@@ -35,12 +38,26 @@ export const ForgetPassword = () => {
 
   const handleSendPress = async () => {
     setIsLoading(true);
-    // Call API
-    setTimeout(() => {
+
+    try {
+      const response = await axios.post(`${API_URL}/send-email`, {
+        email: email,
+      });
+
+      if (response.status === 200) {
+        setIsLoading(false);
+
+        // @ts-ignore
+        navigation.navigate('EnterOTP', {email: email});
+      } else {
+        setIsLoading(false);
+        Alert.alert('Failed to send email. Please try again!');
+      }
+    } catch (error) {
       setIsLoading(false);
-      // @ts-ignore
-      navigation.navigate('EnterOTP', {email: email});
-    }, 3000);
+      console.error('Error sending email:', error);
+      Alert.alert('An error occurred. Please try again later.');
+    }
   };
 
   const handleLoginPress = () => {

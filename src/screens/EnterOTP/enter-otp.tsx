@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -18,12 +19,12 @@ import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {useRoute} from '@react-navigation/native';
 import {OtpInput} from 'react-native-otp-entry';
+import axios from 'axios';
+import {API_URL} from '@env';
 
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
-
-const trueOTP = '111111';
 
 export const EnterOTP = () => {
   const navigation = useAppNavigation();
@@ -41,15 +42,25 @@ export const EnterOTP = () => {
     setIsLoading(true);
     setResend(false);
 
-    // Call API
-    setTimeout(() => {
-      setIsLoading(false);
-      if (otp != trueOTP) {
-        setWrongOtp(true);
+    try {
+      const response = await axios.post(`${API_URL}/check-otp`, {
+        email: email,
+        otp: otp,
+      });
+
+      if (response.status === 200) {
+        setIsLoading(false);
+
+        //@ts-ignore
+        navigation.replace('GetBackPass', {email: email});
       } else {
-        navigation.replace('GetBackPass');
+        setIsLoading(false);
+        Alert.alert('Failed to send email. Please try again!');
       }
-    }, 3000);
+    } catch (error) {
+      setIsLoading(false);
+      setWrongOtp(true);
+    }
   };
 
   const handleLoginPress = () => {
