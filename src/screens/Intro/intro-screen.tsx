@@ -17,7 +17,7 @@ export const IntroScreen = () => {
   const handleStartPress = async () => {
     await AsyncStorage.setItem('first-time-use', 'true');
 
-    navigation.navigate('MainTab');
+    navigation.navigate('Login');
   };
 
   return (
