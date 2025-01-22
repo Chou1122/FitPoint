@@ -14,6 +14,9 @@ import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import axios from 'axios';
+import {API_URL} from '@env';
 
 const {colors, font, space} = theme;
 
@@ -50,6 +53,22 @@ export const SportRecording = () => {
     }
   };
 
+  // Check permission
+  // useEffect(() => {
+  //   const requestPermissions = async () => {
+  //     const cameraPermission = await request(PERMISSIONS.ANDROID.CAMERA);
+  //     const audioPermission = await request(PERMISSIONS.ANDROID.RECORD_AUDIO);
+
+  //     if (cameraPermission === 'granted' && audioPermission === 'granted') {
+  //       console.log('All permissions granted');
+  //     } else {
+  //       console.error('Permissions not granted');
+  //     }
+  //   };
+
+  //   requestPermissions();
+  // }, []);
+
   const startCountdown = () => {
     setCountDown(3);
     setIsCountdown(true);
@@ -69,9 +88,51 @@ export const SportRecording = () => {
     if (cameraRef.current == null) return;
     setIsRecording(true);
     await cameraRef.current.startRecording({
-      onRecordingFinished: video => {
+      onRecordingFinished: async video => {
         console.log('Video file saved at:', video.path);
+
         setIsRecording(false);
+
+        try {
+          setIsLoading(true);
+
+          const formData = new FormData();
+          formData.append('video', {
+            uri: 'file://' + video.path,
+            name: 'recording.mov',
+            type: 'video/quicktime',
+          });
+
+          // console.log('FORM DATA: ', JSON.stringify(formData));
+
+          const response = await axios.post(
+            `${API_URL}/process-video`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            },
+          );
+
+          if (response.status === 200) {
+            setIsLoading(false);
+
+            console.log(response.data);
+
+            // @ts-ignore
+            navigation.navigate('MainTab', {
+              screen: 'Home',
+              params: {screen: 'RecordResult', videoResult: response.data},
+            });
+          } else {
+            console.error('API error:', response.data.error);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          console.error('Error during video upload:', error);
+          setIsLoading(false);
+        }
       },
       onRecordingError: error => {
         console.error('Recording error:', error);
@@ -85,14 +146,14 @@ export const SportRecording = () => {
     await cameraRef.current.stopRecording();
     setIsRecording(false);
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // @ts-ignore
-      navigation.navigate('MainTab', {
-        screen: 'Home',
-        params: {screen: 'RecordResult'},
-      });
-    }, 1000);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   // @ts-ignore
+    //   navigation.navigate('MainTab', {
+    //     screen: 'Home',
+    //     params: {screen: 'RecordResult'},
+    //   });
+    // }, 1000);
   };
 
   const renderTip = (item: any) => {
