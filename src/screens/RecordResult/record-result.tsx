@@ -40,7 +40,7 @@ export const RecordResult = ({id}: any) => {
     setTotal(roundToTwo(result?.total, 2) ?? 0);
     setAccuracy(roundToTwo(result?.accuracy, 2) ?? 0);
     setFormTechnique(roundToTwo(result?.form_technique, 2) ?? 0);
-    setSpeed(result?.speed ?? 0);
+    setSpeed(roundToTwo(result?.speed, 2) ?? 0);
     setOverall(roundToTwo(result?.overall, 2) ?? 0);
   }, [result]);
 

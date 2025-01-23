@@ -17,6 +17,7 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import axios from 'axios';
 import {API_URL} from '@env';
+import {handleRecordingFinished} from './upload-record';
 
 const {colors, font, space} = theme;
 
@@ -72,53 +73,13 @@ export const SportRecording = () => {
     if (cameraRef.current == null) return;
     setIsRecording(true);
     await cameraRef.current.startRecording({
-      onRecordingFinished: async video => {
-        console.log('Video file saved at:', video.path);
-
-        setIsRecording(false);
-
-        try {
-          setIsLoading(true);
-
-          const formData = new FormData();
-          formData.append('video', {
-            uri: 'file://' + video.path,
-            name: 'recording.mov',
-            type: 'video/quicktime',
-          });
-
-          const response = await axios.post(
-            `${API_URL}/process-video`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            },
-          );
-
-          if (response.status === 200) {
-            setIsLoading(false);
-
-            // @ts-ignore
-            navigation.navigate('MainTab', {
-              screen: 'Home',
-              params: {
-                screen: 'RecordResult',
-                params: {
-                  videoResult: JSON.parse(response.data.result),
-                },
-              },
-            });
-          } else {
-            console.error('API error:', response.data.error);
-            setIsLoading(false);
-          }
-        } catch (error) {
-          console.error('Error during video upload:', error);
-          setIsLoading(false);
-        }
-      },
+      onRecordingFinished: async video =>
+        handleRecordingFinished(
+          video,
+          setIsRecording,
+          setIsLoading,
+          navigation,
+        ),
       onRecordingError: error => {
         console.error('Recording error:', error);
         setIsRecording(false);
