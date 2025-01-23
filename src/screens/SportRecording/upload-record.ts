@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {API_URL} from '@env';
+import {processVideoWithAI} from './process-video';
 
 interface Video {
   path: string;
@@ -29,25 +30,18 @@ export const handleRecordingFinished = async (
       type: 'video/quicktime',
     });
 
-    const response = await axios.post(`${API_URL}/process-video`, formData, {
+    const response = await axios.post(`${API_URL}/upload-cloud`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
     if (response.status === 200) {
-      setIsLoading(false);
-
-      // @ts-ignore
-      navigation.navigate('MainTab', {
-        screen: 'Home',
-        params: {
-          screen: 'RecordResult',
-          params: {
-            videoResult: JSON.parse(response.data.result),
-          },
-        },
-      });
+      await processVideoWithAI(
+        setIsLoading,
+        navigation,
+        response.data.videoUrl,
+      );
     } else {
       console.error('API error:', response.data.error);
       setIsLoading(false);

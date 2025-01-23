@@ -17,6 +17,7 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import axios from 'axios';
 import {API_URL} from '@env';
+// import {handleRecordingFinished} from './new-upload-record';
 import {handleRecordingFinished} from './upload-record';
 
 const {colors, font, space} = theme;

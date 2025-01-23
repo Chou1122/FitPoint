@@ -27,13 +27,14 @@ export const RecordResult = ({id}: any) => {
   const [accuracy, setAccuracy] = useState<number>(71.237);
   const [formTechnique, setFormTechnique] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(0);
+  const [durationScore, setDurationScore] = useState<number>(0);
 
   const [overall, setOverall] = useState<number>(6.017);
 
   const [commentList, setCommentList] = useState<string[]>(mockCmt);
   const [rankList, setRankList] = useState<string[]>(mockRank);
 
-  const styles = createStyle(accuracy, formTechnique, overall);
+  const styles = createStyle(accuracy, formTechnique, durationScore, overall);
 
   useEffect(() => {
     setDuration(roundToTwo(result?.duration, 0) ?? 0);
@@ -42,6 +43,7 @@ export const RecordResult = ({id}: any) => {
     setFormTechnique(roundToTwo(result?.form_technique, 2) ?? 0);
     setSpeed(roundToTwo(result?.speed, 2) ?? 0);
     setOverall(roundToTwo(result?.overall, 2) ?? 0);
+    setDurationScore(result?.duration_score ?? 0);
   }, [result]);
 
   const onBack = () => {
@@ -91,7 +93,7 @@ export const RecordResult = ({id}: any) => {
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Duration:</Text>
-            <Text style={styles.textDetail}>
+            <Text style={styles.durationText}>
               {formatSecondsToMMSS(duration)}
             </Text>
           </View>
@@ -149,7 +151,12 @@ export const RecordResult = ({id}: any) => {
   );
 };
 
-const createStyle = (accuracy: number, technique: number, overall: number) =>
+const createStyle = (
+  accuracy: number,
+  technique: number,
+  durationScore: number,
+  overall: number,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -331,6 +338,22 @@ const createStyle = (accuracy: number, technique: number, overall: number) =>
           : technique >= 50
           ? colors.neutral
           : technique >= 30
+          ? colors.bad
+          : colors.veryBad,
+    },
+    durationText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        durationScore >= 90
+          ? colors.veryGood
+          : durationScore >= 70
+          ? colors.good
+          : durationScore >= 50
+          ? colors.neutral
+          : durationScore >= 30
           ? colors.bad
           : colors.veryBad,
     },
