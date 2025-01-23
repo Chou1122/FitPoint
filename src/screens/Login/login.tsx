@@ -23,6 +23,7 @@ import {PopUpSuccessChangePass} from './popup-success-change-pass';
 import {useRoute} from '@react-navigation/native';
 import {API_URL} from '@env';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {colors} = theme;
 
@@ -36,6 +37,22 @@ export const Login = () => {
   // @ts-ignore
   const popupTitle = params?.popupTitle;
 
+  const checkHasToken = async () => {
+    const userName = await AsyncStorage.getItem('userName');
+    const password = await AsyncStorage.getItem('password');
+
+    if (userName !== null && password !== null) {
+      setIsLoading(true);
+      await handleLogin(userName, password);
+    }
+
+    return;
+  };
+
+  useEffect(() => {
+    checkHasToken();
+  }, []);
+
   useEffect(() => {
     if (popupTitle) {
       handleSetShowPopup(true);
@@ -47,6 +64,7 @@ export const Login = () => {
   const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [wrongInfo, setWrongInfo] = useState<boolean>(false);
+  const [checkRe, setCheckRe] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -62,7 +80,7 @@ export const Login = () => {
     setWrongInfo(false);
   };
 
-  const handleLoginPress = async () => {
+  const handleLogin = async (userName: string, password: string) => {
     setIsLoading(true);
 
     try {
@@ -93,6 +111,18 @@ export const Login = () => {
     }
   };
 
+  const handleLoginPress = async () => {
+    if (checkRe) {
+      await AsyncStorage.setItem('userName', userName);
+      await AsyncStorage.setItem('password', password);
+    } else {
+      await AsyncStorage.removeItem('userName');
+      await AsyncStorage.removeItem('password');
+    }
+
+    await handleLogin(userName, password);
+  };
+
   const handleForgotPress = () => {
     navigation.navigate('ForgetPassword');
   };
@@ -105,13 +135,17 @@ export const Login = () => {
     setShowPopup(value);
   };
 
+  const handleCheckPress = () => {
+    setCheckRe(!checkRe);
+  };
+
   const disabled = useMemo(() => {
     return !(userName && password);
   }, [userName, password]);
 
   return (
     <KeyboardDissMissView>
-      <View style={styles.contanier}>
+      <>
         <LoadingSpinner isVisible={isLoading} />
         <Popup isVisible={showPopup} animationType="none">
           <PopUpSuccessChangePass
@@ -135,7 +169,10 @@ export const Login = () => {
           style={styles.scrlWrapper}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
-          <ScrollView style={styles.scrl}>
+          <ScrollView
+            style={styles.scrl}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
             <View style={styles.contentWrapper1}>
               <Logo size={'giant'} opacity={0.8} />
               <Text style={styles.textName}>PerfectFit</Text>
@@ -168,11 +205,28 @@ export const Login = () => {
                 </View>
               )}
 
-              <TouchableOpacity
-                onPress={handleForgotPress}
-                style={styles.btnForgot}>
-                <Text style={styles.textForgot}>Forgot password?</Text>
-              </TouchableOpacity>
+              <View style={styles.btnAndReWapper}>
+                <TouchableOpacity
+                  style={styles.btnRemember}
+                  onPress={handleCheckPress}>
+                  <View
+                    style={[styles.rememberBtn, checkRe && styles.btnChecked]}>
+                    {checkRe && (
+                      <Icon
+                        name={IconName['icon-check']}
+                        style={styles.iconCheck}
+                      />
+                    )}
+                  </View>
+                  <Text style={styles.textRememberMe}>Remember me</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={handleForgotPress}
+                  style={styles.btnForgot}>
+                  <Text style={styles.textForgot}>Forgot password?</Text>
+                </TouchableOpacity>
+              </View>
 
               <TouchableOpacity
                 style={[styles.btnLogin, disabled && styles.btnDisabled]}
@@ -193,9 +247,10 @@ export const Login = () => {
                 <Text style={styles.textLogin}>Sign Up</Text>
               </TouchableOpacity>
             </View>
+            <View style={styles.footer} />
           </ScrollView>
         </KeyboardAvoidingView>
-      </View>
+      </>
     </KeyboardDissMissView>
   );
 };
@@ -206,12 +261,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  footer: {
+    height: 60,
+  },
   warningWrapper: {
     flexDirection: 'row',
     width: '100%',
     paddingLeft: 4,
     marginTop: -12,
     opacity: 0.8,
+  },
+  btnRemember: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  rememberBtn: {
+    width: 15,
+    height: 15,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.gray3,
+  },
+  btnChecked: {
+    backgroundColor: colors.blue3,
+    borderColor: colors.blue3,
+  },
+  iconCheck: {
+    width: 11,
+    height: 11,
+    color: colors.white,
   },
   textWarning: {
     marginLeft: 4,
@@ -274,10 +355,23 @@ const styles = StyleSheet.create({
   btnDisabled: {
     opacity: 0.4,
   },
-  btnForgot: {
+  btnAndReWapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: -8,
+    width: '100%',
+    paddingHorizontal: 8,
+  },
+  btnForgot: {
     alignSelf: 'flex-end',
-    paddingRight: 8,
+  },
+  textRememberMe: {
+    fontSize: 15,
+    lineHeight: 20,
+    fontWeight: 'bold',
+    color: colors.blue3,
+    opacity: 0.8,
   },
   textForgot: {
     fontSize: 16,

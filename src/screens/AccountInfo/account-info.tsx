@@ -26,6 +26,7 @@ import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {Popup} from '../../component/popup/popup';
 import {PopUpSuccessChangePass2} from './popup-change-pass';
 import {useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {space, colors, font} = theme;
 
@@ -78,11 +79,14 @@ export const AccountInfo = () => {
 
   const handleEditPress = () => {};
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      navigation.navigate('Login');
-    }, 1000);
+
+    await AsyncStorage.removeItem('userName');
+    await AsyncStorage.removeItem('password');
+
+    setIsLoading(false);
+    navigation.navigate('Login');
   };
 
   const handleClosePopup = () => {
