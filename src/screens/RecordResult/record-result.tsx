@@ -28,13 +28,20 @@ export const RecordResult = ({id}: any) => {
   const [formTechnique, setFormTechnique] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(0);
   const [durationScore, setDurationScore] = useState<number>(0);
+  const [speedScore, setSpeedScore] = useState<number>(0);
 
   const [overall, setOverall] = useState<number>(6.017);
 
   const [commentList, setCommentList] = useState<string[]>(mockCmt);
   const [rankList, setRankList] = useState<string[]>(mockRank);
 
-  const styles = createStyle(accuracy, formTechnique, durationScore, overall);
+  const styles = createStyle(
+    accuracy,
+    formTechnique,
+    durationScore,
+    speedScore,
+    overall,
+  );
 
   useEffect(() => {
     setDuration(roundToTwo(result?.duration, 0) ?? 0);
@@ -44,6 +51,7 @@ export const RecordResult = ({id}: any) => {
     setSpeed(roundToTwo(result?.speed, 2) ?? 0);
     setOverall(roundToTwo(result?.overall, 2) ?? 0);
     setDurationScore(result?.duration_score ?? 0);
+    setSpeedScore(roundToTwo(result?.speed_score, 2) ?? 0);
   }, [result]);
 
   const onBack = () => {
@@ -115,7 +123,7 @@ export const RecordResult = ({id}: any) => {
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Speed:</Text>
-            <Text style={styles.textDetail}>{speed}/s</Text>
+            <Text style={styles.speedText}>{speed}/s</Text>
           </View>
 
           <View style={styles.line} />
@@ -155,6 +163,7 @@ const createStyle = (
   accuracy: number,
   technique: number,
   durationScore: number,
+  speedScore: number,
   overall: number,
 ) =>
   StyleSheet.create({
@@ -354,6 +363,22 @@ const createStyle = (
           : durationScore >= 50
           ? colors.neutral
           : durationScore >= 30
+          ? colors.bad
+          : colors.veryBad,
+    },
+    speedText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        speedScore >= 90
+          ? colors.veryGood
+          : speedScore >= 70
+          ? colors.good
+          : speedScore >= 50
+          ? colors.neutral
+          : speedScore >= 30
           ? colors.bad
           : colors.veryBad,
     },

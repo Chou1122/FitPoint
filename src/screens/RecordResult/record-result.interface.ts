@@ -6,4 +6,5 @@ export interface RecordResultProps {
   speed?: number;
   overall?: number;
   duration_score?: number;
+  speed_score?: number;
 }
