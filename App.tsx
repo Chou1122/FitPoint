@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Provider} from 'react-redux';
+import store from './src/stores/store';
+
 import {SportDetail} from './src/screens/SportDetail/sport-detail';
 import {SportTutorial} from './src/screens/SportTutorial/sport-tutorial';
 import {SportRecording} from './src/screens/SportRecording/sport-recording';
@@ -80,18 +83,14 @@ function MainTabs() {
   );
 }
 
-function App(): React.JSX.Element {
-  // Check is first time use app
+function AppContent() {
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
-  const checkHasToken = () => {
+  const checkHasToken = async () => {
     setInitialRoute('Login');
   };
 
   const checkFirstLaunch = async () => {
-    // setInitialRoute('GetBackPass');
-    // return;
-
     try {
       const firstValue = await AsyncStorage.getItem('first-time-use');
       if (firstValue === null || firstValue === 'false') {
@@ -136,6 +135,14 @@ function App(): React.JSX.Element {
         <Stack.Screen name="Info" component={AccountInfo} />
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+function App(): React.JSX.Element {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 }
 

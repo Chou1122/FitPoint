@@ -24,12 +24,17 @@ import {useRoute} from '@react-navigation/native';
 import {API_URL} from '@env';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUser, UserInfo} from '../../stores/infoUser.store';
 
 const {colors} = theme;
 
 const {version} = require('../../../package.json');
 
 export const Login = () => {
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state: any) => state.userInfo);
+
   const navigation = useAppNavigation();
 
   const route = useRoute();
@@ -89,7 +94,22 @@ export const Login = () => {
         password: password,
       });
       setIsLoading(false);
-      navigation.navigate('MainTab');
+
+      const {userId, email} = response.data;
+
+      const newUserInfo: UserInfo = {
+        id: userId,
+        email: email,
+        userName: userName,
+        password: password,
+      };
+
+      dispatch(setUser(newUserInfo));
+
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'MainTab'}],
+      });
     } catch (error: any) {
       setIsLoading(false);
 
@@ -274,11 +294,11 @@ const styles = StyleSheet.create({
   btnRemember: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
   },
   rememberBtn: {
-    width: 15,
-    height: 15,
+    width: 16,
+    height: 16,
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
@@ -290,8 +310,8 @@ const styles = StyleSheet.create({
     borderColor: colors.blue3,
   },
   iconCheck: {
-    width: 11,
-    height: 11,
+    width: 10,
+    height: 10,
     color: colors.white,
   },
   textWarning: {

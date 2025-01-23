@@ -1,5 +1,11 @@
 import React, {useMemo, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {KeyboardDissMissView} from '../../component/keyboardDismissView/keyboard-dissmiss-view';
@@ -8,10 +14,18 @@ import {Input} from '../../component/input/input';
 import {Icon, IconName} from '../../component/icon/icon';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL} from '@env';
+import axios from 'axios';
+import {setPasswordUser} from '../../stores/infoUser.store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {colors, space} = theme;
 
 export const ChangePassword = () => {
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state: any) => state.userInfo);
+
   const styles = createStyle();
   const navigation = useAppNavigation();
 
@@ -22,9 +36,8 @@ export const ChangePassword = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const checkCurrPass = useMemo(() => {
-    // Call api
-    return true;
-  }, [currPass]);
+    return currPass === userInfo.password;
+  }, [currPass, userInfo]);
 
   const checkNewPass = useMemo(() => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
@@ -51,16 +64,41 @@ export const ChangePassword = () => {
     setRetypePass(value);
   };
 
-  const handleChangePress = () => {
+  const handleChangePress = async () => {
     // Call api
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // @ts-ignore
-      navigation.navigate('Info', {
-        popupTitle: 'Password change successfully!',
+
+    try {
+      const response = await axios.post(`${API_URL}/get-back-pass`, {
+        email: userInfo.email,
+        newPassword: newPass,
       });
-    }, 2000);
+
+      if (response.status === 200) {
+        // Save new pass to store
+        dispatch(setPasswordUser(newPass));
+
+        const _password = await AsyncStorage.getItem('password');
+
+        if (_password !== null && _password !== undefined) {
+          await AsyncStorage.setItem('password', newPass);
+        }
+        //
+
+        setIsLoading(false);
+        // @ts-ignore
+        navigation.navigate('Info', {
+          popupTitle: 'Password change successfully!',
+        });
+      } else {
+        setIsLoading(false);
+        Alert.alert('Failed to send email. Please try again!');
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error sending email:', error);
+      Alert.alert('An error occurred. Please try again later.');
+    }
   };
 
   return (
@@ -116,12 +154,16 @@ export const ChangePassword = () => {
               value={retypePass}
               onChangeText={handleRetypePassChange}
             />
-            {!checkRetypePass && retypePass.length > 0 && (
-              <View style={styles.warningWrapper}>
-                <Icon name={IconName['icon-warning']} style={styles.icon} />
-                <Text style={styles.warningText}>Passwords do not match!</Text>
-              </View>
-            )}
+            {!checkRetypePass &&
+              retypePass.length > 0 &&
+              newPass.length > 0 && (
+                <View style={styles.warningWrapper}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.warningText}>
+                    Passwords do not match!
+                  </Text>
+                </View>
+              )}
           </View>
 
           <TouchableOpacity
