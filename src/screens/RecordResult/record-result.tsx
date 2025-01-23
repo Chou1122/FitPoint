@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
@@ -6,32 +6,43 @@ import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {SportCard} from '../SportSelection/sport-card/sport-card';
 import {Icon, IconName} from '../../component/icon/icon';
+import {useRoute} from '@react-navigation/native';
+import {RecordResultProps} from './record-result.interface';
+import {roundToTwo} from '../../helpers/number.helper';
+import {formatSecondsToMMSS} from '../../helpers/time.helper';
+import {mockCmt, mockRank} from './mock-result';
 
 const {colors, font, space} = theme;
 
-const mockCmt = [
-  'Excellent! You did the exercise perfectly with great technique. Keep it up!',
-  'Your workout is great, but there are still some small details to improve. Pay more attention to your breathing and accuracy for better results!',
-  'Your workout is average. Improve your technique and try to maintain a steady pace for better results.',
-  "There are many flaws in technique, but don't get discouraged! Start at a slower pace and focus on correct form.",
-  'Your exercise is not up to standard. Keep practicing, starting from the basics to gradually improve.',
-];
-
-const mockRank = ['Excellent !!', 'Good !', 'Average', 'Bad !', 'Very bad !!'];
-
 export const RecordResult = ({id}: any) => {
+  const route = useRoute();
+  const params = route.params;
+  // @ts-ignore
+  const result: RecordResultProps = route.params.videoResult;
+
   const navigation = useAppNavigation();
 
-  const [duration, setDuration] = useState<string>('00:16');
+  const [duration, setDuration] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
   const [accuracy, setAccuracy] = useState<number>(71.237);
-  const [stability, setStability] = useState<number>(49.894);
-  const [repetitions, setRepetitions] = useState<number>(4);
+  const [formTechnique, setFormTechnique] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(0);
+
   const [overall, setOverall] = useState<number>(6.017);
 
   const [commentList, setCommentList] = useState<string[]>(mockCmt);
   const [rankList, setRankList] = useState<string[]>(mockRank);
 
-  const styles = createStyle(accuracy, stability, overall);
+  const styles = createStyle(accuracy, formTechnique, overall);
+
+  useEffect(() => {
+    setDuration(roundToTwo(result?.duration, 0) ?? 0);
+    setTotal(roundToTwo(result?.total, 2) ?? 0);
+    setAccuracy(roundToTwo(result?.accuracy, 2) ?? 0);
+    setFormTechnique(roundToTwo(result?.form_technique, 2) ?? 0);
+    setSpeed(result?.speed ?? 0);
+    setOverall(roundToTwo(result?.overall, 2) ?? 0);
+  }, [result]);
 
   const onBack = () => {
     navigation.navigate('SportDetail', {id: '0'});
@@ -80,7 +91,14 @@ export const RecordResult = ({id}: any) => {
 
           <View style={styles.resultDetail}>
             <Text style={styles.textDetail}>Duration:</Text>
-            <Text style={styles.textDetail}>{duration}</Text>
+            <Text style={styles.textDetail}>
+              {formatSecondsToMMSS(duration)}
+            </Text>
+          </View>
+
+          <View style={styles.resultDetail}>
+            <Text style={styles.textDetail}>Total:</Text>
+            <Text style={styles.textDetail}>{total}</Text>
           </View>
 
           <View style={styles.resultDetail}>
@@ -89,13 +107,13 @@ export const RecordResult = ({id}: any) => {
           </View>
 
           <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Stability:</Text>
-            <Text style={styles.stabilityText}>{stability}%</Text>
+            <Text style={styles.textDetail}>Technique:</Text>
+            <Text style={styles.tecniqueText}>{formTechnique}%</Text>
           </View>
 
           <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Repetitions:</Text>
-            <Text style={styles.textDetail}>{repetitions}</Text>
+            <Text style={styles.textDetail}>Speed:</Text>
+            <Text style={styles.textDetail}>{speed}/s</Text>
           </View>
 
           <View style={styles.line} />
@@ -131,7 +149,7 @@ export const RecordResult = ({id}: any) => {
   );
 };
 
-const createStyle = (accuracy: number, stability: number, overall: number) =>
+const createStyle = (accuracy: number, technique: number, overall: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -300,19 +318,19 @@ const createStyle = (accuracy: number, stability: number, overall: number) =>
           ? colors.bad
           : colors.veryBad,
     },
-    stabilityText: {
+    tecniqueText: {
       flex: 1,
       textAlign: 'left',
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        stability >= 90
+        technique >= 90
           ? colors.veryGood
-          : stability >= 70
+          : technique >= 70
           ? colors.good
-          : stability >= 50
+          : technique >= 50
           ? colors.neutral
-          : stability >= 30
+          : technique >= 30
           ? colors.bad
           : colors.veryBad,
     },
