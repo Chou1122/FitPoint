@@ -28,9 +28,9 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
   const [history, setHistory] = useState<any>(mockData);
   const navigation = useAppNavigation();
 
-  const renderItem = ({item, isLast = false}: any) => {
+  const renderItem = ({item, isLast = false, index}: any) => {
     return (
-      <View style={styles.historyItem}>
+      <View style={styles.historyItem} key={index}>
         <View style={styles.contentItem}>
           <Text style={{flex: 1}}>{item.time}</Text>
           <Text style={{flex: 1}}>{item.score}</Text>
@@ -71,11 +71,11 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
             </View>
             <ScrollView style={styles.historyWrapper}>
               <View style={{height: heightLabel}} />
-              {history.map((item, index) => {
+              {history.map((item: any, index: any) => {
                 if (index == history.length - 1) {
-                  return renderItem({item, isLast: true});
+                  return renderItem({item, isLast: true, index});
                 }
-                return renderItem({item});
+                return renderItem({item, index});
               })}
             </ScrollView>
             <View style={styles.emptyBox} />
