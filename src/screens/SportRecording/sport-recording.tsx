@@ -1,20 +1,18 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
+  Alert,
 } from 'react-native';
-import {
-  Camera,
-  useCameraDevice,
-  useCameraPermission,
-} from 'react-native-vision-camera';
+import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
-import {request, PERMISSIONS} from 'react-native-permissions';
+import {request, PERMISSIONS, check, RESULTS} from 'react-native-permissions';
 import {handleRecordingFinished} from './upload-record';
 
 const {colors, font, space} = theme;
@@ -30,19 +28,51 @@ const mockTips = [
 
 export const SportRecording = () => {
   const device = useCameraDevice('back');
-  const {hasPermission} = useCameraPermission();
   const cameraRef = useRef<Camera | null>(null);
   const navigation = useAppNavigation();
 
   const [isRecording, setIsRecording] = useState(false);
   const [isCountdown, setIsCountdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [countDown, setCountDown] = useState<number>(-1);
   const [tipList, setTipList] = useState(mockTips);
 
-  if (device == null) return <View style={styles.container} />;
-  if (!hasPermission) return <View style={styles.container} />;
+  const [cameraAccess, setCameraAccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    const requestCameraPermission = async () => {
+      try {
+        const result = await check(
+          Platform.OS === 'ios'
+            ? PERMISSIONS.IOS.CAMERA
+            : PERMISSIONS.ANDROID.CAMERA,
+        );
+
+        if (result === RESULTS.DENIED) {
+          // Yêu cầu quyền nếu quyền bị từ chối hoặc chưa được cấp
+          const requestResult = await request(
+            Platform.OS === 'ios'
+              ? PERMISSIONS.IOS.CAMERA
+              : PERMISSIONS.ANDROID.CAMERA,
+          );
+
+          if (requestResult === RESULTS.GRANTED) {
+            setCameraAccess(true);
+          } else {
+            setCameraAccess(false);
+          }
+        } else if (result === RESULTS.GRANTED) {
+          setCameraAccess(true);
+        } else {
+          Alert.alert('Warning', 'Can not access camera!');
+        }
+      } catch (error) {
+        console.error('Error request:', error);
+      }
+    };
+
+    requestCameraPermission();
+  }, []);
 
   const handlePressBtn = () => {
     if (isRecording) {
@@ -101,6 +131,29 @@ export const SportRecording = () => {
     );
   };
 
+  const renderCamera = useCallback(() => {
+    if (!cameraAccess)
+      return (
+        <>
+          <View style={styles.mockCamera} />
+        </>
+      );
+
+    return (
+      <>
+        {device !== null && (
+          <Camera
+            video={true}
+            style={styles.camera}
+            device={device}
+            isActive={true}
+            ref={cameraRef}
+          />
+        )}
+      </>
+    );
+  }, [cameraAccess]);
+
   return (
     <View style={styles.container}>
       <Header title={'Workout Recording'} />
@@ -115,18 +168,8 @@ export const SportRecording = () => {
       <Text style={styles.timeText}>Estimate time: 1 minute</Text>
 
       <View style={styles.cameraWrapper}>
-        {false ? (
-          <Camera
-            video={true}
-            style={styles.camera}
-            // @ts-ignore
-            device={device}
-            isActive={true}
-            ref={cameraRef}
-          />
-        ) : (
-          <View style={styles.mockCamera} />
-        )}
+        <View style={{width: '100%', height: '100%'}}>{renderCamera()}</View>
+
         {!isRecording && !isCountdown && (
           <View style={styles.tipCamera}>
             <Text style={styles.labelTip}>Recording Tip:</Text>
@@ -169,7 +212,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
   mockCamera: {
     flex: 1,
