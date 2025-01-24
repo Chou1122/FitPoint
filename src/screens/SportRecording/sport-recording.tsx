@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Platform,
   Alert,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
@@ -14,20 +15,14 @@ import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {request, PERMISSIONS, check, RESULTS} from 'react-native-permissions';
 import {handleRecordingFinished} from './upload-record';
+import {mockTips} from './mock-tip';
+import {Icon, IconName} from '../../component/icon/icon';
 
 const {colors, font, space} = theme;
 
-const mockTips = [
-  'Clear obstacles to avoid accidents.',
-  'Ensure good lighting and camera setup.',
-  'Stretch before starting.',
-  'Wear comfy clothes and prep equipment.',
-  'Check battery and storage.',
-  'Ensure the space is appropriate for recording.',
-];
-
 export const SportRecording = () => {
   const device = useCameraDevice('back');
+
   const cameraRef = useRef<Camera | null>(null);
   const navigation = useAppNavigation();
 
@@ -36,42 +31,40 @@ export const SportRecording = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [countDown, setCountDown] = useState<number>(-1);
   const [tipList, setTipList] = useState(mockTips);
-
   const [cameraAccess, setCameraAccess] = useState<boolean>(false);
 
-  useEffect(() => {
-    const requestCameraPermission = async () => {
-      try {
-        const result = await check(
+  const requestCameraPermission = async () => {
+    try {
+      const result = await check(
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CAMERA
+          : PERMISSIONS.ANDROID.CAMERA,
+      );
+
+      if (result === RESULTS.DENIED) {
+        const requestResult = await request(
           Platform.OS === 'ios'
             ? PERMISSIONS.IOS.CAMERA
             : PERMISSIONS.ANDROID.CAMERA,
         );
 
-        if (result === RESULTS.DENIED) {
-          // Yêu cầu quyền nếu quyền bị từ chối hoặc chưa được cấp
-          const requestResult = await request(
-            Platform.OS === 'ios'
-              ? PERMISSIONS.IOS.CAMERA
-              : PERMISSIONS.ANDROID.CAMERA,
-          );
-
-          if (requestResult === RESULTS.GRANTED) {
-            setCameraAccess(true);
-          } else {
-            setCameraAccess(false);
-          }
-        } else if (result === RESULTS.GRANTED) {
+        if (requestResult === RESULTS.GRANTED) {
           setCameraAccess(true);
         } else {
-          Alert.alert('Warning', 'Can not access camera!');
+          setCameraAccess(false);
         }
-      } catch (error) {
-        console.error('Error request:', error);
+      } else if (result === RESULTS.GRANTED) {
+        setCameraAccess(true);
+      } else {
+        Alert.alert('Warning', 'Can not access your camera!');
       }
-    };
+    } catch (error) {
+      console.error('Error request:', error);
+    }
+  };
 
-    requestCameraPermission();
+  useEffect(() => {
+    setTimeout(() => requestCameraPermission(), 500);
   }, []);
 
   const handlePressBtn = () => {
@@ -131,17 +124,10 @@ export const SportRecording = () => {
     );
   };
 
-  const renderCamera = useCallback(() => {
-    if (!cameraAccess)
-      return (
-        <>
-          <View style={styles.mockCamera} />
-        </>
-      );
-
+  const renderCamera = () => {
     return (
-      <>
-        {device !== null && (
+      <View style={styles.cameraWrapper}>
+        {device && (
           <Camera
             video={true}
             style={styles.camera}
@@ -150,25 +136,6 @@ export const SportRecording = () => {
             ref={cameraRef}
           />
         )}
-      </>
-    );
-  }, [cameraAccess]);
-
-  return (
-    <View style={styles.container}>
-      <Header title={'Workout Recording'} />
-
-      {isLoading ? (
-        <View style={styles.loadingCon}>
-          <ActivityIndicator size={60} style={{opacity: 1}} />
-        </View>
-      ) : null}
-
-      <Text style={styles.labelSport}>Push Up</Text>
-      <Text style={styles.timeText}>Estimate time: 1 minute</Text>
-
-      <View style={styles.cameraWrapper}>
-        <View style={{width: '100%', height: '100%'}}>{renderCamera()}</View>
 
         {!isRecording && !isCountdown && (
           <View style={styles.tipCamera}>
@@ -191,6 +158,46 @@ export const SportRecording = () => {
           </View>
         )}
       </View>
+    );
+  };
+
+  const renderMockCamera = useCallback(() => {
+    return (
+      <View style={styles.cameraWrapper}>
+        <View style={styles.mockCamera} />
+
+        <TouchableWithoutFeedback
+          style={styles.warningW}
+          onPress={requestCameraPermission}>
+          <View style={styles.warningW}>
+            <Icon
+              name={IconName['icon-camera-slash']}
+              style={{color: colors.gray3, width: 80, height: 80}}
+            />
+            <Text style={styles.textW}>
+              Camera access is required to record. Please enable camera
+              permissions in your device settings to continue.
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    );
+  }, [styles]);
+
+  return (
+    <View style={styles.container}>
+      <Header title={'Workout Recording'} />
+
+      {isLoading ? (
+        <View style={styles.loadingCon}>
+          <ActivityIndicator size={60} style={{opacity: 1}} />
+        </View>
+      ) : null}
+
+      <Text style={styles.labelSport}>Push Up</Text>
+      <Text style={styles.timeText}>Estimate time: 1 minute</Text>
+
+      {cameraAccess ? <>{renderCamera()}</> : <>{renderMockCamera()}</>}
 
       <TouchableOpacity
         disabled={isCountdown}
@@ -207,6 +214,22 @@ export const SportRecording = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  warningW: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
+  textW: {
+    color: colors.white,
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'justify',
+    paddingHorizontal: 20,
   },
   cameraWrapper: {
     flex: 1,
