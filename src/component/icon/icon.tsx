@@ -27,6 +27,7 @@ import {IconTrophyStar} from './icons-list/icon-trophy-star';
 import {IconSuccess} from './icons-list/icon-success';
 import {IconCheck} from './icons-list/icon-check';
 import {IconCameraSlash} from './icons-list/icon-camera-slash';
+import {IconBirthday} from './icons-list/icon-birthday';
 
 export enum IconName {
   'icon-back',
@@ -56,6 +57,7 @@ export enum IconName {
   'icon-success',
   'icon-check',
   'icon-camera-slash',
+  'icon-birthday',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -126,6 +128,8 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconCheck {...style} />
       ) : name === IconName['icon-camera-slash'] ? (
         <IconCameraSlash {...style} />
+      ) : name === IconName['icon-birthday'] ? (
+        <IconBirthday {...style} />
       ) : null}
     </View>
   );

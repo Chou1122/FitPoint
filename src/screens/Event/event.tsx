@@ -1,6 +1,20 @@
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {Header} from '../../component/header/header';
 
 export const Event = () => {
-  return <View></View>;
+  const styles = createStyle();
+
+  return (
+    <View style={styles.container}>
+      <Header btnGoBack={false} title="Event" />
+    </View>
+  );
 };
+
+const createStyle = () =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+  });

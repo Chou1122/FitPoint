@@ -51,6 +51,7 @@ export const AccountInfo = () => {
 
   const [email, setEmail] = useState<string>('mhp12092003@gmail.com');
   const [phone, setPhone] = useState<string>('0888120903');
+  const [birthday, setBirthday] = useState<string>('12/09/2003');
   const [gender, setGender] = useState<Gender>(Gender.Male);
   const [address, setAddress] = useState<string>(
     '8/237 Hàn Thuyên, Tp Nam Định, tỉnh Nam Định',
@@ -86,7 +87,10 @@ export const AccountInfo = () => {
     await AsyncStorage.removeItem('password');
 
     setIsLoading(false);
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   };
 
   const handleClosePopup = () => {
@@ -161,6 +165,19 @@ export const AccountInfo = () => {
               </View>
               <View style={styles.infoContentWrapper}>
                 <Text style={styles.textContent}>{phone}</Text>
+              </View>
+            </View>
+
+            <View style={styles.infoWrapper}>
+              <View style={styles.infoLabelWrapper}>
+                <Icon
+                  name={IconName['icon-birthday']}
+                  style={styles.iconLabel}
+                />
+                <Text style={styles.infoLabelText}>Birthday</Text>
+              </View>
+              <View style={styles.infoContentWrapper}>
+                <Text style={styles.textContent}>{birthday}</Text>
               </View>
             </View>
 

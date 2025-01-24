@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: colors.yellow,
+    backgroundColor: colors.header,
     zIndex: 100,
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
@@ -165,10 +165,12 @@ const styles = StyleSheet.create({
   textLeft: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.white,
   },
   textRight: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.white,
   },
   historyWrapper: {
     marginBottom: 20,
