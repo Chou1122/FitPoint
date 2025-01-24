@@ -15,9 +15,6 @@ import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import axios from 'axios';
-import {API_URL} from '@env';
-// import {handleRecordingFinished} from './new-upload-record';
 import {handleRecordingFinished} from './upload-record';
 
 const {colors, font, space} = theme;
@@ -118,13 +115,18 @@ export const SportRecording = () => {
       <Text style={styles.timeText}>Estimate time: 1 minute</Text>
 
       <View style={styles.cameraWrapper}>
-        <Camera
-          video={true}
-          style={styles.camera}
-          device={device}
-          isActive={true}
-          ref={cameraRef}
-        />
+        {false ? (
+          <Camera
+            video={true}
+            style={styles.camera}
+            // @ts-ignore
+            device={device}
+            isActive={true}
+            ref={cameraRef}
+          />
+        ) : (
+          <View style={styles.mockCamera} />
+        )}
         {!isRecording && !isCountdown && (
           <View style={styles.tipCamera}>
             <Text style={styles.labelTip}>Recording Tip:</Text>
@@ -168,6 +170,10 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  mockCamera: {
+    flex: 1,
+    backgroundColor: colors.black,
   },
   labelSport: {
     textAlign: 'left',
