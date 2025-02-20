@@ -1,8 +1,9 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CustomText as Text} from '../../../component/text-custom/text-custom';
 import {theme} from '../../../hooks/theme/theme';
 import useAppNavigation from '../../../hooks/navigation/use-navigation';
+import {formatTime} from '../../../helpers/time.helper';
 
 const {colors} = theme;
 
@@ -12,7 +13,7 @@ export interface SportCardProps {
   name?: string | undefined;
   img?: string | undefined;
   score?: number | undefined;
-  duration?: string | undefined | number;
+  time?: string | undefined | number;
   maxScore?: number;
   id: string;
   showVideo?: boolean;
@@ -25,7 +26,7 @@ export const SportCard = ({
   img,
   score = 0,
   maxScore = 100,
-  duration = '1',
+  time = '1',
   id = '0',
   showVideo = false,
   onPressCard,
@@ -38,20 +39,39 @@ export const SportCard = ({
 
   const navigation = useAppNavigation();
 
+  const [imgThumbnail, setImgThumbnail] = useState<string | undefined>(img);
+
   const handleCardPress = () => {
-    onPressCard ? onPressCard() : navigation.navigate('SportDetail', {id: id});
+    onPressCard
+      ? onPressCard()
+      : // @ts-ignore
+        navigation.navigate('SportDetail', {
+          id: id,
+          name: name,
+          img: imgThumbnail,
+          time: time,
+        });
   };
 
   const handleVideoPress = () => {
     onPressVideo && onPressVideo();
   };
 
+  const handleErrorImg = () => {
+    setImgThumbnail(
+      'https://res.cloudinary.com/dx3prv3ka/image/upload/v1740049787/lhqwdmt5lrd4eatfbaxa.jpg',
+    );
+  };
+
   return (
     <TouchableOpacity style={styles.container} onPress={handleCardPress}>
       <View style={styles.imgWrapper}>
         <Image
-          source={require('../../../assets/images/push-up.jpg')}
+          source={{
+            uri: imgThumbnail,
+          }}
           style={styles.img}
+          onError={handleErrorImg}
         />
       </View>
       <View style={styles.contentWrapper}>
@@ -59,10 +79,9 @@ export const SportCard = ({
           <Text style={styles.textName}>{name}</Text>
         </View>
         <View style={styles.bodyWrapper}>
-          <Text
-            style={
-              styles.textTime
-            }>{`Estimate time: ${duration} minutes`}</Text>
+          <Text style={styles.textTime}>{`Estimate time: ${formatTime(
+            time,
+          )}`}</Text>
 
           <Text style={styles.textScore}>{`Your best score: ${score}`}</Text>
 
@@ -110,7 +129,7 @@ const styles = StyleSheet.create({
   img: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   contentWrapper: {
     flex: 1,

@@ -22,9 +22,14 @@ const mockData = [
 
 export interface SportDetailProps {
   id: string;
+  img: string | undefined;
+  time: string;
+  name: string;
 }
 
-export const SportDetail = ({id = '0'}: SportDetailProps) => {
+export const SportDetail = (props: any) => {
+  const {id = '0', img, time, name} = props.route.params;
+
   const [history, setHistory] = useState<any>(mockData);
   const navigation = useAppNavigation();
 
@@ -45,7 +50,13 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
   };
 
   const handleTutorialPress = () => {
-    navigation.navigate('SportTutorial');
+    //@ts-ignore
+    navigation.navigate('SportTutorial', {
+      id: id,
+      img: img,
+      time: time,
+      name: name,
+    });
   };
 
   return (
@@ -54,6 +65,9 @@ export const SportDetail = ({id = '0'}: SportDetailProps) => {
       <View style={styles.contentWrapper}>
         <SportCard
           id={id}
+          img={img}
+          time={time}
+          name={name}
           showVideo={true}
           onPressCard={handleTutorialPress}
           onPressVideo={handleTutorialPress}
@@ -151,7 +165,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: colors.yellow,
+    backgroundColor: colors.primary,
     zIndex: 100,
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
@@ -165,10 +179,12 @@ const styles = StyleSheet.create({
   textLeft: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.white,
   },
   textRight: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: colors.white,
   },
   historyWrapper: {
     marginBottom: 20,

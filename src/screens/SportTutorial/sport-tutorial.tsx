@@ -6,6 +6,7 @@ import Video, {VideoRef} from 'react-native-video';
 import {theme} from '../../hooks/theme/theme';
 import {Icon, IconName} from '../../component/icon/icon';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {formatTime} from '../../helpers/time.helper';
 
 const {colors, space, font} = theme;
 
@@ -22,8 +23,11 @@ const mockTip = [
   'Wear comfortable clothes and supportive shoes.',
 ];
 
-export const SportTutorial = () => {
+export const SportTutorial = (props: any) => {
+  console.log(JSON.stringify(props));
   const navigation = useAppNavigation();
+
+  const {id = '0', img, time, name} = props.route.params;
 
   const videoRef = useRef<VideoRef>(null);
   const [isPaused, setIsPaused] = useState<boolean>(true);
@@ -82,8 +86,8 @@ export const SportTutorial = () => {
     <View style={styles.container}>
       <Header title="Tutorial" />
       <View style={styles.nameSportWrapper}>
-        <Text style={styles.nameText}>Push Up</Text>
-        <Text style={styles.timeText}>Estimate time: 1 minute</Text>
+        <Text style={styles.nameText}>{name}</Text>
+        <Text style={styles.timeText}>Estimate time: {formatTime(time)}</Text>
       </View>
       <TouchableOpacity style={styles.videoWrapper} onPress={handleVideoPress}>
         {isShowPause || isPaused ? (
