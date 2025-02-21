@@ -9,12 +9,16 @@ export const processVideoWithAI = async (
   setIsLoading: (value: boolean) => void,
   navigation: Navigation,
   videoUrl: string,
+  userId: string | number,
+  sportId: string |number,
 ): Promise<void> => {
   console.log('Video url:', videoUrl);
 
   try {
     const response = await axios.post(`${API_URL}/process-push-up`, {
       videoUrl: videoUrl,
+      userId: userId,
+      sportId: sportId,
     });
 
     if (response.status === 200) {

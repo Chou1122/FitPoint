@@ -17,14 +17,18 @@ import {request, PERMISSIONS, check, RESULTS} from 'react-native-permissions';
 import {handleRecordingFinished} from './upload-record';
 import {mockTips} from './mock-tip';
 import {Icon, IconName} from '../../component/icon/icon';
+import {useSelector} from 'react-redux';
 
 const {colors, font, space} = theme;
 
-export const SportRecording = () => {
+export const SportRecording = (props: any) => {
+  const sportId = props.route.params.id;
+
   const device = useCameraDevice('back');
 
   const cameraRef = useRef<Camera | null>(null);
   const navigation = useAppNavigation();
+  const userInfo = useSelector((state: any) => state.userInfo);
 
   const [isRecording, setIsRecording] = useState(false);
   const [isCountdown, setIsCountdown] = useState(false);
@@ -100,6 +104,8 @@ export const SportRecording = () => {
           setIsRecording,
           setIsLoading,
           navigation,
+          userInfo.id,
+          sportId,
         ),
       onRecordingError: error => {
         console.error('Recording error:', error);

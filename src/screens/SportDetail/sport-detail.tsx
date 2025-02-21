@@ -46,7 +46,13 @@ export const SportDetail = (props: any) => {
   };
 
   const handleStartPress = () => {
-    navigation.navigate('SportRecording');
+    //@ts-ignore
+    navigation.navigate('SportRecording', {
+      id: id,
+      img: img,
+      time: time,
+      name: name,
+    });
   };
 
   const handleTutorialPress = () => {
