@@ -1,24 +1,29 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
 import {Header} from '../../component/header/header';
 import {theme} from '../../hooks/theme/theme';
 import {SportCard} from '../SportSelection/sport-card/sport-card';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
+import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
+import axios from 'axios';
+import {API_URL} from '@env';
+import {useSelector} from 'react-redux';
+import {formatTimeHistory} from '../../helpers/time.helper';
 
 const {colors, space, font} = theme;
 
 const heightLabel = 32;
 
-const mockData = [
-  {time: '20/12/2024 12:59', score: '0'},
-  {time: '22/12/2024 00:13', score: '34'},
-  {time: '22/12/2024 00:20', score: '55'},
-  {time: '23/12/2024 11:08', score: '89'},
-  {time: '23/12/2024 12:05', score: '2'},
-  {time: '23/12/2024 08:38', score: '65'},
-  {time: '24/12/2024 10:22', score: '72'},
-];
+// const mockData = [
+//   {time: '20/12/2024 12:59', score: '0'},
+//   {time: '22/12/2024 00:13', score: '34'},
+//   {time: '22/12/2024 00:20', score: '55'},
+//   {time: '23/12/2024 11:08', score: '89'},
+//   {time: '23/12/2024 12:05', score: '2'},
+//   {time: '23/12/2024 08:38', score: '65'},
+//   {time: '24/12/2024 10:22', score: '72'},
+// ];
 
 export interface SportDetailProps {
   id: string;
@@ -29,21 +34,46 @@ export interface SportDetailProps {
 
 export const SportDetail = (props: any) => {
   const {id = '0', img, time, name} = props.route.params;
+  const userInfo = useSelector((state: any) => state.userInfo);
 
-  const [history, setHistory] = useState<any>(mockData);
+  const [history, setHistory] = useState<any>([]);
+  const [isLoading, setIsloading] = useState<boolean>(false);
   const navigation = useAppNavigation();
 
   const renderItem = ({item, isLast = false, index}: any) => {
     return (
       <View style={styles.historyItem} key={index}>
         <View style={styles.contentItem}>
-          <Text style={{flex: 1}}>{item.time}</Text>
-          <Text style={{flex: 1}}>{item.score}</Text>
+          <Text style={{flex: 1}}>{formatTimeHistory(item.time)}</Text>
+          <Text style={{flex: 1}}>{item.scores}</Text>
         </View>
         {!isLast && <View style={styles.lineGray} />}
       </View>
     );
   };
+
+  const getSportHistory = async () => {
+    setIsloading(true);
+
+    try {
+      //@ts-ignore
+      const response = await axios.get(`${API_URL}/get-sport-historys`, {
+        params: {
+          userId: userInfo.id,
+          sportId: id,
+        },
+      });
+      setIsloading(false);
+
+      setHistory(response.data);
+    } catch (error: any) {
+      setIsloading(false);
+    }
+  };
+
+  useEffect(() => {
+    getSportHistory();
+  }, []);
 
   const handleStartPress = () => {
     //@ts-ignore
@@ -69,6 +99,7 @@ export const SportDetail = (props: any) => {
     <View style={styles.container}>
       <Header title="Push up" />
       <View style={styles.contentWrapper}>
+        <LoadingSpinner isVisible={isLoading} />
         <SportCard
           id={id}
           img={img}
