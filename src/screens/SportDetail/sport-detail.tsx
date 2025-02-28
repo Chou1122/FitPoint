@@ -97,7 +97,7 @@ export const SportDetail = (props: any) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Push up" />
+      <Header title={name} />
       <View style={styles.contentWrapper}>
         <LoadingSpinner isVisible={isLoading} />
         <SportCard
