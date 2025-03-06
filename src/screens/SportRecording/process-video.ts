@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {API_URL} from '@env';
+import {GetProcessVideoUrlFromId} from './get-process-video-from-id';
 
 interface Navigation {
   navigate: (route: string, params?: any) => void;
@@ -10,16 +11,20 @@ export const processVideoWithAI = async (
   navigation: Navigation,
   videoUrl: string,
   userId: string | number,
-  sportId: string |number,
+  sportId: string | number,
 ): Promise<void> => {
   console.log('Video url:', videoUrl);
+  console.log('ID: ', sportId);
 
   try {
-    const response = await axios.post(`${API_URL}/process-push-up`, {
-      videoUrl: videoUrl,
-      userId: userId,
-      sportId: sportId,
-    });
+    const response = await axios.post(
+      `${API_URL}/${GetProcessVideoUrlFromId(sportId)}`,
+      {
+        videoUrl: videoUrl,
+        userId: userId,
+        sportId: sportId,
+      },
+    );
 
     if (response.status === 200) {
       setIsLoading(false);
