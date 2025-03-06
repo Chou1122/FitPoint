@@ -29,7 +29,7 @@ export const processVideoWithAI = async (
     if (response.status === 200) {
       setIsLoading(false);
 
-      // console.log(response.data.aiResult);
+      console.log(response.data.aiResult);
 
       //@ts-ignore
       navigation.navigate('MainTab', {

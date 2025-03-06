@@ -55,6 +55,7 @@ export const RecordResult = ({id}: any) => {
   }, [result]);
 
   const onBack = () => {
+    //@ts-ignore
     navigation.navigate('SportDetail', {id: '0'});
   };
 
