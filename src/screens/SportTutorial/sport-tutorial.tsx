@@ -24,7 +24,6 @@ const mockTip = [
 ];
 
 export const SportTutorial = (props: any) => {
-  // console.log(JSON.stringify(props));
   const navigation = useAppNavigation();
 
   const {id = '0', img, time, name} = props.route.params;
