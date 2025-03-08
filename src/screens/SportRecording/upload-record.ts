@@ -17,6 +17,9 @@ export const handleRecordingFinished = async (
   navigation: Navigation,
   userId: string | number,
   sportId: string | number,
+  img: string | any,
+  time: number | string | any,
+  name: string,
 ): Promise<void> => {
   console.log('Video file saved at:', video.path);
 
@@ -45,6 +48,9 @@ export const handleRecordingFinished = async (
         response.data.videoUrl,
         userId,
         sportId,
+        img,
+        time,
+        name,
       );
     } else {
       console.error('API error:', response.data.error);

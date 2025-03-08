@@ -41,6 +41,7 @@ export const SportCard = ({
 
   const [imgThumbnail, setImgThumbnail] = useState<string | undefined>(img);
 
+  console.log(id, name, imgThumbnail, time);
   const handleCardPress = () => {
     onPressCard
       ? onPressCard()

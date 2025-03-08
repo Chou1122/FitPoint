@@ -15,16 +15,6 @@ const {colors, space, font} = theme;
 
 const heightLabel = 32;
 
-// const mockData = [
-//   {time: '20/12/2024 12:59', score: '0'},
-//   {time: '22/12/2024 00:13', score: '34'},
-//   {time: '22/12/2024 00:20', score: '55'},
-//   {time: '23/12/2024 11:08', score: '89'},
-//   {time: '23/12/2024 12:05', score: '2'},
-//   {time: '23/12/2024 08:38', score: '65'},
-//   {time: '24/12/2024 10:22', score: '72'},
-// ];
-
 export interface SportDetailProps {
   id: string;
   img: string | undefined;

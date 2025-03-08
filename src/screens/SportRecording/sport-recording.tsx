@@ -18,11 +18,12 @@ import {handleRecordingFinished} from './upload-record';
 import {mockTips} from './mock-tip';
 import {Icon, IconName} from '../../component/icon/icon';
 import {useSelector} from 'react-redux';
+import {formatTime} from '../../helpers/time.helper';
 
 const {colors, font, space} = theme;
 
 export const SportRecording = (props: any) => {
-  const sportId = props.route.params.id;
+  const {id: sportId, time, img, name} = props.route.params;
 
   const device = useCameraDevice('back');
 
@@ -106,6 +107,9 @@ export const SportRecording = (props: any) => {
           navigation,
           userInfo.id,
           sportId,
+          img,
+          time,
+          name,
         ),
       onRecordingError: error => {
         console.error('Recording error:', error);
@@ -200,13 +204,15 @@ export const SportRecording = (props: any) => {
         </View>
       ) : null}
 
-      <Text style={styles.labelSport}>Push Up</Text>
-      <Text style={styles.timeText}>Estimate time: 1 minute</Text>
+      <Text style={styles.labelSport}>{name}</Text>
+      <Text style={styles.timeText}>{`Estimate time: ${formatTime(
+        time,
+      )}`}</Text>
 
       {cameraAccess ? <>{renderCamera()}</> : <>{renderMockCamera()}</>}
 
       <TouchableOpacity
-        disabled={isCountdown}
+        disabled={isCountdown || !cameraAccess}
         style={[styles.btnStartWrapper, isCountdown && styles.btnDisabled]}
         onPress={handlePressBtn}>
         <Text style={styles.textBtnStart}>

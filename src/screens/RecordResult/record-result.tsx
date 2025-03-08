@@ -14,9 +14,13 @@ import {mockCmt, mockRank} from './mock-result';
 
 const {colors, font, space} = theme;
 
-export const RecordResult = ({id}: any) => {
+export const RecordResult = () => {
   const route = useRoute();
   const params = route.params;
+
+  //@ts-ignore
+  const {id, time, img, name} = params;
+
   // @ts-ignore
   const result: RecordResultProps = route.params.videoResult;
 
@@ -56,7 +60,7 @@ export const RecordResult = ({id}: any) => {
 
   const onBack = () => {
     //@ts-ignore
-    navigation.navigate('SportDetail', {id: '0'});
+    navigation.navigate('SportDetail', {id: id});
   };
 
   const sportListPress = () => {
@@ -91,7 +95,14 @@ export const RecordResult = ({id}: any) => {
       <Header title="Your recording result" onBack={onBack} />
 
       <View style={styles.cardCon}>
-        <SportCard id={id} showVideo={false} onPressCard={onBack} />
+        <SportCard
+          id={id}
+          showVideo={false}
+          onPressCard={onBack}
+          time={time}
+          name={name}
+          img={img}
+        />
       </View>
 
       <View style={styles.resultWrapper}>

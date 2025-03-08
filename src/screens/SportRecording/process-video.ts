@@ -12,6 +12,9 @@ export const processVideoWithAI = async (
   videoUrl: string,
   userId: string | number,
   sportId: string | number,
+  img: string | any,
+  time: number | string | any,
+  name: string,
 ): Promise<void> => {
   console.log('Video url:', videoUrl);
   console.log('ID: ', sportId);
@@ -38,6 +41,10 @@ export const processVideoWithAI = async (
           screen: 'RecordResult',
           params: {
             videoResult: JSON.parse(response.data.aiResult),
+            id: sportId,
+            img,
+            time,
+            name,
           },
         },
       });
