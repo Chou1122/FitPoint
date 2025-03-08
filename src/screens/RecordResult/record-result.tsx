@@ -60,7 +60,7 @@ export const RecordResult = () => {
 
   const onBack = () => {
     //@ts-ignore
-    navigation.navigate('SportDetail', {id: id});
+    navigation.navigate('SportDetail', {id: id, img, time, name});
   };
 
   const sportListPress = () => {
