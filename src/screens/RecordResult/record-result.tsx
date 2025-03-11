@@ -26,15 +26,16 @@ export const RecordResult = () => {
 
   const navigation = useAppNavigation();
 
-  const [duration, setDuration] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0);
-  const [accuracy, setAccuracy] = useState<number>(71.237);
-  const [formTechnique, setFormTechnique] = useState<number>(0);
-  const [speed, setSpeed] = useState<number>(0);
-  const [durationScore, setDurationScore] = useState<number>(0);
-  const [speedScore, setSpeedScore] = useState<number>(0);
+  const [duration, setDuration] = useState<number | null>(null);
+  const [total, setTotal] = useState<number | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
+  const [formTechnique, setFormTechnique] = useState<number | null>(null);
+  const [speed, setSpeed] = useState<number | null>(null);
+  const [durationScore, setDurationScore] = useState<number | null>(null);
+  const [speedScore, setSpeedScore] = useState<number | null>(null);
+  const [validTime, setValidTime] = useState<number | null>(null);
 
-  const [overall, setOverall] = useState<number>(6.017);
+  const [overall, setOverall] = useState<number | null>(null);
 
   const [commentList, setCommentList] = useState<string[]>(mockCmt);
   const [rankList, setRankList] = useState<string[]>(mockRank);
@@ -45,17 +46,21 @@ export const RecordResult = () => {
     durationScore,
     speedScore,
     overall,
+    validTime,
   );
 
   useEffect(() => {
-    setDuration(roundToTwo(result?.duration, 0) ?? 0);
-    setTotal(roundToTwo(result?.total, 2) ?? 0);
-    setAccuracy(roundToTwo(result?.accuracy, 2) ?? 0);
-    setFormTechnique(roundToTwo(result?.form_technique, 2) ?? 0);
-    setSpeed(roundToTwo(result?.speed, 2) ?? 0);
-    setOverall(roundToTwo(result?.overall, 2) ?? 0);
-    setDurationScore(result?.duration_score ?? 0);
-    setSpeedScore(roundToTwo(result?.speed_score, 2) ?? 0);
+    console.log('RES: ', JSON.stringify(result));
+
+    setDuration(roundToTwo(result?.duration, 0) ?? null);
+    setTotal(roundToTwo(result?.total, 2) ?? null);
+    setAccuracy(roundToTwo(result?.accuracy, 2) ?? null);
+    setFormTechnique(roundToTwo(result?.form_technique, 2) ?? null);
+    setSpeed(roundToTwo(result?.speed, 2) ?? null);
+    setOverall(roundToTwo(result?.overall, 2) ?? null);
+    setDurationScore(result?.duration_score ?? null);
+    setSpeedScore(roundToTwo(result?.speed_score, 2) ?? null);
+    setValidTime(roundToTwo(result?.valid_time, 0) ?? null);
   }, [result]);
 
   const onBack = () => {
@@ -75,6 +80,7 @@ export const RecordResult = () => {
   };
 
   const getComment = () => {
+    if (overall === null) return 0;
     if (overall >= 9) return 0;
     if (overall >= 7) return 1;
     if (overall >= 5) return 2;
@@ -83,6 +89,7 @@ export const RecordResult = () => {
   };
 
   const getIcon = () => {
+    if (overall === null) return IconName['icon-very-sad'];
     if (overall >= 9) return IconName['icon-very-happy'];
     if (overall >= 7) return IconName['icon-happy'];
     if (overall >= 5) return IconName['icon-neutral'];
@@ -111,32 +118,51 @@ export const RecordResult = () => {
 
           <View style={styles.line} />
 
-          <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Duration:</Text>
-            <Text style={styles.durationText}>
-              {formatSecondsToMMSS(duration)}
-            </Text>
-          </View>
+          {duration != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Duration:</Text>
+              <Text style={styles.durationText}>
+                {formatSecondsToMMSS(duration)}
+              </Text>
+            </View>
+          )}
 
-          <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Total:</Text>
-            <Text style={styles.textDetail}>{total}</Text>
-          </View>
+          {validTime != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Valid time:</Text>
+              <Text style={styles.validTimeText}>
+                {formatSecondsToMMSS(validTime)}
+              </Text>
+            </View>
+          )}
 
-          <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Accuracy:</Text>
-            <Text style={styles.accuracyText}>{accuracy}%</Text>
-          </View>
+          {total != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Total:</Text>
+              <Text style={styles.textDetail}>{total}</Text>
+            </View>
+          )}
 
-          <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Technique:</Text>
-            <Text style={styles.tecniqueText}>{formTechnique}%</Text>
-          </View>
+          {accuracy != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Accuracy:</Text>
+              <Text style={styles.accuracyText}>{accuracy}%</Text>
+            </View>
+          )}
 
-          <View style={styles.resultDetail}>
-            <Text style={styles.textDetail}>Speed:</Text>
-            <Text style={styles.speedText}>{speed}/s</Text>
-          </View>
+          {formTechnique != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Technique:</Text>
+              <Text style={styles.tecniqueText}>{formTechnique}%</Text>
+            </View>
+          )}
+
+          {speed != null && (
+            <View style={styles.resultDetail}>
+              <Text style={styles.textDetail}>Speed:</Text>
+              <Text style={styles.speedText}>{speed}/s</Text>
+            </View>
+          )}
 
           <View style={styles.line} />
 
@@ -172,11 +198,12 @@ export const RecordResult = () => {
 };
 
 const createStyle = (
-  accuracy: number,
-  technique: number,
-  durationScore: number,
-  speedScore: number,
-  overall: number,
+  accuracy: number | null,
+  technique: number | null,
+  durationScore: number | null,
+  speedScore: number | null,
+  overall: number | null,
+  validTime: number | null,
 ) =>
   StyleSheet.create({
     container: {
@@ -249,7 +276,9 @@ const createStyle = (
       height: 40,
       width: 40,
       color:
-        overall >= 9
+        overall === null
+          ? colors.veryBad
+          : overall >= 9
           ? colors.veryGood
           : overall >= 7
           ? colors.good
@@ -279,7 +308,9 @@ const createStyle = (
       fontSize: 20,
       lineHeight: 28,
       color:
-        overall >= 9
+        overall === null
+          ? colors.veryBad
+          : overall >= 9
           ? colors.veryGood
           : overall >= 7
           ? colors.good
@@ -303,7 +334,9 @@ const createStyle = (
       fontSize: 16,
       lineHeight: 20,
       color:
-        overall >= 9
+        overall === null
+          ? colors.veryBad
+          : overall >= 9
           ? colors.veryGood
           : overall >= 7
           ? colors.good
@@ -320,7 +353,9 @@ const createStyle = (
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        overall >= 9
+        overall === null
+          ? colors.veryBad
+          : overall >= 9
           ? colors.veryGood
           : overall >= 7
           ? colors.good
@@ -336,7 +371,9 @@ const createStyle = (
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        accuracy >= 90
+        accuracy === null
+          ? colors.veryBad
+          : accuracy >= 90
           ? colors.veryGood
           : accuracy >= 70
           ? colors.good
@@ -352,7 +389,9 @@ const createStyle = (
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        technique >= 90
+        technique === null
+          ? colors.veryBad
+          : technique >= 90
           ? colors.veryGood
           : technique >= 70
           ? colors.good
@@ -368,7 +407,9 @@ const createStyle = (
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        durationScore >= 90
+        durationScore === null
+          ? colors.veryBad
+          : durationScore >= 90
           ? colors.veryGood
           : durationScore >= 70
           ? colors.good
@@ -384,13 +425,33 @@ const createStyle = (
       fontSize: 17.2,
       lineHeight: 22,
       color:
-        speedScore >= 90
+        speedScore === null
+          ? colors.veryBad
+          : speedScore >= 90
           ? colors.veryGood
           : speedScore >= 70
           ? colors.good
           : speedScore >= 50
           ? colors.neutral
           : speedScore >= 30
+          ? colors.bad
+          : colors.veryBad,
+    },
+    validTimeText: {
+      flex: 1,
+      textAlign: 'left',
+      fontSize: 17.2,
+      lineHeight: 22,
+      color:
+        validTime === null
+          ? colors.veryBad
+          : validTime >= 90
+          ? colors.veryGood
+          : validTime >= 70
+          ? colors.good
+          : validTime >= 50
+          ? colors.neutral
+          : validTime >= 30
           ? colors.bad
           : colors.veryBad,
     },

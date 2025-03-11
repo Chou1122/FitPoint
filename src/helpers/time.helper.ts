@@ -5,7 +5,9 @@ export const convertSecondsToMinSecObject = (seconds: number) => {
   return {minutes, seconds: remainingSeconds};
 };
 
-export const formatSecondsToMMSS = (seconds: number) => {
+export const formatSecondsToMMSS = (seconds: number | null) => {
+  if (seconds === null) return '';
+
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
