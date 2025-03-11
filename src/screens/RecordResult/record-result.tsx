@@ -57,7 +57,7 @@ export const RecordResult = () => {
     setAccuracy(roundToTwo(result?.accuracy, 2) ?? null);
     setFormTechnique(roundToTwo(result?.form_technique, 2) ?? null);
     setSpeed(roundToTwo(result?.speed, 2) ?? null);
-    setOverall(roundToTwo(result?.overall, 2) ?? null);
+    setOverall(roundToTwo(result?.overall, 2) ?? 0);
     setDurationScore(result?.duration_score ?? null);
     setSpeedScore(roundToTwo(result?.speed_score, 2) ?? null);
     setValidTime(roundToTwo(result?.valid_time, 0) ?? null);
