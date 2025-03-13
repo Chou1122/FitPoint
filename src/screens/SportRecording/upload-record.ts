@@ -29,9 +29,11 @@ export const handleRecordingFinished = async (
     setIsLoading(true);
 
     const formData = new FormData();
+
+    const fileName = video.path.split('/').pop();
     formData.append('video', {
       uri: 'file://' + video.path,
-      name: 'recording.mov',
+      name: fileName,
       type: 'video/quicktime',
     });
 
@@ -45,7 +47,7 @@ export const handleRecordingFinished = async (
       await processVideoWithAI(
         setIsLoading,
         navigation,
-        response.data.videoUrl,
+        response.data.videoPath,
         userId,
         sportId,
         img,
