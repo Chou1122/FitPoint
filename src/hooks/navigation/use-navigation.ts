@@ -1,7 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
-import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { SportDetailProps } from '../../screens/SportDetail/sport-detail';
+import {useNavigation} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
+import type {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {SportDetailProps} from '../../screens/SportDetail/sport-detail';
 
 // Tab navigation parameter list
 type TabParamList = {
@@ -10,6 +10,7 @@ type TabParamList = {
   RecordResult: undefined;
   Info: undefined;
   ChangePassword: undefined;
+  ChangeInfo: undefined;
   ScreenEvent: undefined;
 };
 
@@ -31,7 +32,7 @@ type StackParamList = {
 };
 
 // Define the combined navigation prop
-type AppNavigationProp = StackNavigationProp<StackParamList> & 
+type AppNavigationProp = StackNavigationProp<StackParamList> &
   BottomTabNavigationProp<TabParamList>;
 
 // Hook to use navigation with proper type safety

@@ -20,7 +20,7 @@ interface InputProps {
   placeholder?: string;
   multiline?: boolean;
   editable?: boolean;
-  value?: string;
+  value?: string | null;
   isPassword?: boolean;
   keyboardType?: any;
   inputStyle?: StyleProp<ViewStyle | TextStyle | ImageStyle>;
@@ -40,8 +40,10 @@ export const Input = ({
 }: InputProps) => {
   const styles = createStyle(style, editable, multiline, inputStyle);
 
-  const [valueText, setValueText] = useState<string>(value);
-  const [isShowPass, setIsShowPass] = useState<boolean>(isPassword);
+  const [valueText, setValueText] = useState<string | null>(value);
+  const [isShowPass, setIsShowPass] = useState<boolean>(
+    isPassword ? true : false,
+  );
 
   const handleTextChange = (value: string) => {
     setValueText(value);
@@ -57,7 +59,7 @@ export const Input = ({
       <TextInput
         keyboardType={keyboardType}
         secureTextEntry={isShowPass}
-        value={valueText}
+        value={valueText || ''}
         editable={editable}
         multiline={multiline}
         placeholder={placeholder}

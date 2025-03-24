@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -25,12 +25,16 @@ import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
 import {Popup} from '../../component/popup/popup';
 import {PopUpSuccessChangePass2} from './popup-change-pass';
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
+import {API_URL} from '@env';
 
 const {space, colors, font} = theme;
 
 export const AccountInfo = () => {
+  const userInfo = useSelector((state: any) => state.userInfo);
   const navigation = useAppNavigation();
 
   const route = useRoute();
@@ -46,17 +50,15 @@ export const AccountInfo = () => {
     setShowPopup(false);
   }, [popupTitle]);
 
-  const [name, setName] = useState('Phạm Hồng Minh');
+  const [name, setName] = useState(null);
   const [rank, setRank] = useState<RankGym>(RankGym.Expert);
 
-  const [email, setEmail] = useState<string>('mhp12092003@gmail.com');
-  const [phone, setPhone] = useState<string>('0888120903');
-  const [gender, setGender] = useState<Gender>(Gender.Male);
-  const [address, setAddress] = useState<string>(
-    '8/237 Hàn Thuyên, Tp Nam Định, tỉnh Nam Định',
-  );
-  const [nation, setNation] = useState<Nation>(Nation.VietNam);
-  const [timeExp, setTimeExp] = useState<number | string>(4);
+  const [email, setEmail] = useState<string | null>(userInfo.email);
+  const [phone, setPhone] = useState<string | null>(null);
+  const [gender, setGender] = useState<Gender | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
+  const [nation, setNation] = useState<Nation | null>(null);
+  const [timeExp, setTimeExp] = useState<number | string | null>(null);
   const [memberShip, setMemberShip] = useState(1);
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -65,9 +67,39 @@ export const AccountInfo = () => {
 
   const styles = useMemo(() => createStyle(rank), [rank]);
 
-  useEffect(() => {
-    //Call api
-  }, []);
+  const getUserInfo = async () => {
+    setIsLoading(true);
+
+    try {
+      //@ts-ignore
+      const response = await axios.get(`${API_URL}/get-user-info`, {
+        params: {
+          userId: userInfo.id,
+        },
+      });
+
+      const {data} = response;
+
+      setNation(data.nation);
+      setPhone(data.phone);
+      setGender(data.gender);
+      setEmail(data.email ? data.email : userInfo.email);
+      setAddress(data.address);
+      setTimeExp(data.experience);
+
+      setIsLoading(false);
+    } catch (error: any) {
+      console.log('ERROR: ', error);
+
+      setIsLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserInfo();
+    }, []),
+  );
 
   const handleChangePassPress = () => {
     navigation.navigate('ChangePassword');
@@ -75,9 +107,29 @@ export const AccountInfo = () => {
 
   const handleBuyMembershipPress = () => {};
 
-  const handleChangeName = () => {};
+  const handleChangeName = () => {
+    //@ts-ignore
+    navigation.navigate('ChangeInfo', {
+      email: email,
+      phone: phone,
+      gender: gender,
+      nation: nation,
+      address: address,
+      timeExp: timeExp,
+    });
+  };
 
-  const handleEditPress = () => {};
+  const handleEditPress = () => {
+    //@ts-ignore
+    navigation.navigate('ChangeInfo', {
+      email: email,
+      phone: phone,
+      gender: gender,
+      nation: nation,
+      address: address,
+      timeExp: timeExp,
+    });
+  };
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -118,7 +170,11 @@ export const AccountInfo = () => {
             </View>
 
             <View style={styles.nameWrapper}>
-              <Text style={styles.nameText}>{name}</Text>
+              {name ? (
+                <Text style={styles.nameText}>{name}</Text>
+              ) : (
+                <Text style={styles.nameText}>Anonymous</Text>
+              )}
               <TouchableOpacity onPress={handleChangeName}>
                 <Icon name={IconName['icon-edit']} style={styles.iconLabel} />
               </TouchableOpacity>
@@ -150,7 +206,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Email</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{email}</Text>
+                {email ? (
+                  <Text style={styles.textContent}>{email}</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
 
@@ -160,7 +220,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Phone number</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{phone}</Text>
+                {phone ? (
+                  <Text style={styles.textContent}>{phone}</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
 
@@ -170,7 +234,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Gender</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{GenderText[gender]}</Text>
+                {gender ? (
+                  <Text style={styles.textContent}>{GenderText[gender]}</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
 
@@ -180,7 +248,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText2}>Nation</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{NationText[nation]}</Text>
+                {nation ? (
+                  <Text style={styles.textContent}>{NationText[nation]}</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
 
@@ -193,7 +265,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Address</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{address}</Text>
+                {address ? (
+                  <Text style={styles.textContent}>{address}</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
 
@@ -203,7 +279,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Experience</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                <Text style={styles.textContent}>{timeExp} Years</Text>
+                {timeExp ? (
+                  <Text style={styles.textContent}>{timeExp} Years</Text>
+                ) : (
+                  <Text style={styles.textNoInfo}>No information</Text>
+                )}
               </View>
             </View>
           </View>
@@ -340,6 +420,12 @@ const createStyle = (rank: RankGym) =>
       textAlign: 'left',
       fontSize: 16,
       lineHeight: 20,
+    },
+    textNoInfo: {
+      textAlign: 'left',
+      fontSize: 16,
+      lineHeight: 20,
+      color: colors.blue4,
     },
     bottomInfoWrapper: {
       backgroundColor: colors.white,
