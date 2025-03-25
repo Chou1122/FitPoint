@@ -27,6 +27,14 @@ import {IconTrophyStar} from './icons-list/icon-trophy-star';
 import {IconSuccess} from './icons-list/icon-success';
 import {IconCheck} from './icons-list/icon-check';
 import {IconCameraSlash} from './icons-list/icon-camera-slash';
+import {IconUp} from './icons-list/icon-up';
+import {IconDown} from './icons-list/icon-down';
+
+import {IconVietNam} from './icons-list/icon-vietnam';
+import {IconChina} from './icons-list/icon-china';
+import {IconJapan} from './icons-list/icon-japan';
+import {IconRussia} from './icons-list/icon-russia';
+import {IconBrazil} from './icons-list/icon-brazil';
 
 export enum IconName {
   'icon-back',
@@ -56,6 +64,14 @@ export enum IconName {
   'icon-success',
   'icon-check',
   'icon-camera-slash',
+  'icon-up',
+  'icon-down',
+
+  'vietnam',
+  'china',
+  'japan',
+  'russia',
+  'brazil',
 }
 
 export interface StyleIcon extends ViewProps {
@@ -126,6 +142,20 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconCheck {...style} />
       ) : name === IconName['icon-camera-slash'] ? (
         <IconCameraSlash {...style} />
+      ) : name === IconName['icon-up'] ? (
+        <IconUp {...style} />
+      ) : name === IconName['icon-down'] ? (
+        <IconDown {...style} />
+      ) : name === IconName['vietnam'] ? (
+        <IconVietNam {...style} />
+      ) : name === IconName['china'] ? (
+        <IconChina {...style} />
+      ) : name === IconName['japan'] ? (
+        <IconJapan {...style} />
+      ) : name === IconName['russia'] ? (
+        <IconRussia {...style} />
+      ) : name === IconName['brazil'] ? (
+        <IconBrazil {...style} />
       ) : null}
     </View>
   );

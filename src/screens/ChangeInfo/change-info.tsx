@@ -19,6 +19,11 @@ import {API_URL} from '@env';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
 import {setEmailUser} from '../../stores/infoUser.store';
+import {DropDownPicker} from '../../component/dropdownpicker/dropdownpicker';
+import {ListGender} from './list-gender';
+import {Gender} from '../../consts/app.const';
+import {ListNation} from './list-nation';
+import {Nation} from '../../consts/nation.const';
 
 const {colors, space} = theme;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -79,6 +84,14 @@ export const ChangeInfo = () => {
     setTimeExp(value);
   };
 
+  const handleGenderChange = (value: Gender) => {
+    setGender(value);
+  };
+
+  const handleNationChange = (value: Nation) => {
+    setNation(value);
+  };
+
   const checkEmail = useMemo(() => {
     return emailRegex.test(email || '');
   }, [email]);
@@ -92,8 +105,8 @@ export const ChangeInfo = () => {
         userId: userInfo.id,
         email: email,
         phone: phone,
-        gender: null,
-        nation: null,
+        gender: gender,
+        nation: nation,
         address: address,
         experience: timeExp,
       });
@@ -148,6 +161,31 @@ export const ChangeInfo = () => {
               isPassword={false}
               value={phone}
               onChangeText={handlePhoneChange}
+            />
+          </View>
+
+          <View style={styles.dropdownCon}>
+            <Text style={styles.text}>Gender</Text>
+
+            <DropDownPicker
+              initialValue={gender}
+              listItem={ListGender}
+              styleContainer={styles.dropdownWrapper}
+              placeholder="Select your gender"
+              onChangeValue={handleGenderChange}
+            />
+          </View>
+
+          <View style={styles.dropdownCon}>
+            <Text style={styles.text}>Nation</Text>
+
+            <DropDownPicker
+              initialValue={nation}
+              listItem={ListNation}
+              styleContainer={styles.dropdownWrapper}
+              placeholder="Select your nation"
+              onChangeValue={handleNationChange}
+              maxHeightDropDown={120}
             />
           </View>
 
@@ -208,6 +246,13 @@ const createStyle = () =>
   StyleSheet.create({
     container: {
       flex: 1,
+    },
+    dropdownCon: {
+      marginTop: 20,
+      marginHorizontal: space.marginHorizontalBtn,
+    },
+    dropdownWrapper: {
+      marginTop: 4,
     },
     btnWrapper: {
       marginTop: 20,

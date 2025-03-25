@@ -19,7 +19,7 @@ import {
   rankText,
   rankTheme,
 } from '../../consts/app.const';
-import {Nation, NationText} from '../../consts/nation.const';
+import {Nation, NationIcon, NationText} from '../../consts/nation.const';
 import LottieView from 'lottie-react-native';
 import {LoadingSpinner} from '../../component/loadingSpinner/loading-spinner';
 import useAppNavigation from '../../hooks/navigation/use-navigation';
@@ -234,7 +234,7 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText}>Gender</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                {gender ? (
+                {gender != null ? (
                   <Text style={styles.textContent}>{GenderText[gender]}</Text>
                 ) : (
                   <Text style={styles.textNoInfo}>No information</Text>
@@ -248,8 +248,11 @@ export const AccountInfo = () => {
                 <Text style={styles.infoLabelText2}>Nation</Text>
               </View>
               <View style={styles.infoContentWrapper}>
-                {nation ? (
-                  <Text style={styles.textContent}>{NationText[nation]}</Text>
+                {nation != null ? (
+                  <View style={styles.nationWrapper}>
+                    <Icon name={NationIcon[nation]} style={styles.iconFlag} />
+                    <Text style={styles.textContent}>{NationText[nation]}</Text>
+                  </View>
                 ) : (
                   <Text style={styles.textNoInfo}>No information</Text>
                 )}
@@ -479,5 +482,14 @@ const createStyle = (rank: RankGym) =>
       fontWeight: 'bold',
       fontSize: 16,
       lineHeight: 20,
+    },
+    iconFlag: {
+      width: 40,
+      height: 28,
+    },
+    nationWrapper: {
+      flexDirection: 'row',
+      gap: 12,
+      alignItems: 'center',
     },
   });
