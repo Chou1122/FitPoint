@@ -86,6 +86,7 @@ export const AccountInfo = () => {
       setEmail(data.email ? data.email : userInfo.email);
       setAddress(data.address);
       setTimeExp(data.experience);
+      setName(data.name);
 
       setIsLoading(false);
     } catch (error: any) {
@@ -110,6 +111,7 @@ export const AccountInfo = () => {
   const handleChangeName = () => {
     //@ts-ignore
     navigation.navigate('ChangeInfo', {
+      name: name,
       email: email,
       phone: phone,
       gender: gender,
@@ -122,6 +124,7 @@ export const AccountInfo = () => {
   const handleEditPress = () => {
     //@ts-ignore
     navigation.navigate('ChangeInfo', {
+      name: name,
       email: email,
       phone: phone,
       gender: gender,

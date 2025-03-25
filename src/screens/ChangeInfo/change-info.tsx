@@ -40,6 +40,8 @@ export const ChangeInfo = () => {
   const navigation = useAppNavigation();
 
   //@ts-ignore
+  const [name, setName] = useState<string | null>(params.name);
+  //@ts-ignore
   const [email, setEmail] = useState<string | null>(params.email);
   //@ts-ignore
   const [phone, setPhone] = useState<string | null>(params.phone);
@@ -66,6 +68,10 @@ export const ChangeInfo = () => {
 
   const handleCurrPassChange = (value: string) => {
     setCurrPass(value);
+  };
+
+  const handleNameChange = (value: string) => {
+    setName(value);
   };
 
   const handleEmailChange = (value: string) => {
@@ -103,6 +109,7 @@ export const ChangeInfo = () => {
     try {
       const response = await axios.post(`${API_URL}/update-user-info`, {
         userId: userInfo.id,
+        name: name,
         email: email,
         phone: phone,
         gender: gender,
@@ -134,107 +141,136 @@ export const ChangeInfo = () => {
     <KeyboardDissMissView>
       <View style={styles.container}>
         <Header title="Change your information" />
-        <ScrollView>
-          <LoadingSpinner isVisible={isLoading} />
+        <ScrollView
+          style={{flex: 1}}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <TouchableOpacity activeOpacity={1}>
+            <LoadingSpinner isVisible={isLoading} />
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.text}>Your email</Text>
-            <Input
-              placeholder="Email"
-              isPassword={false}
-              value={email}
-              onChangeText={handleEmailChange}
-            />
-            {email !== null && !checkEmail && email.length > 0 && (
-              <View style={styles.warningWrapper}>
-                <Icon name={IconName['icon-warning']} style={styles.icon} />
-                <Text style={styles.warningText}>Your email is invalid!</Text>
-              </View>
-            )}
-          </View>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>Your name</Text>
+              <Input
+                placeholder="Your name"
+                isPassword={false}
+                value={name}
+                onChangeText={handleNameChange}
+              />
+              {email !== null && !checkEmail && email.length > 0 && (
+                <TouchableOpacity
+                  style={styles.warningWrapper}
+                  activeOpacity={1}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.warningText}>Your email is invalid!</Text>
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.text}>Your phone number</Text>
-            <Input
-              placeholder="Phone number"
-              keyboardType={'number-pad'}
-              isPassword={false}
-              value={phone}
-              onChangeText={handlePhoneChange}
-            />
-          </View>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>Your email</Text>
+              <Input
+                placeholder="Email"
+                isPassword={false}
+                value={email}
+                onChangeText={handleEmailChange}
+              />
+              {email !== null && !checkEmail && email.length > 0 && (
+                <TouchableOpacity
+                  style={styles.warningWrapper}
+                  activeOpacity={1}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.warningText}>Your email is invalid!</Text>
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
 
-          <View style={styles.dropdownCon}>
-            <Text style={styles.text}>Gender</Text>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>Your phone number</Text>
+              <Input
+                placeholder="Phone number"
+                keyboardType={'number-pad'}
+                isPassword={false}
+                value={phone}
+                onChangeText={handlePhoneChange}
+              />
+            </TouchableOpacity>
 
-            <DropDownPicker
-              initialValue={gender}
-              listItem={ListGender}
-              styleContainer={styles.dropdownWrapper}
-              placeholder="Select your gender"
-              onChangeValue={handleGenderChange}
-            />
-          </View>
+            <TouchableOpacity style={styles.dropdownCon} activeOpacity={1}>
+              <Text style={styles.text}>Gender</Text>
 
-          <View style={styles.dropdownCon}>
-            <Text style={styles.text}>Nation</Text>
+              <DropDownPicker
+                initialValue={gender}
+                listItem={ListGender}
+                styleContainer={styles.dropdownWrapper}
+                placeholder="Select your gender"
+                onChangeValue={handleGenderChange}
+              />
+            </TouchableOpacity>
 
-            <DropDownPicker
-              initialValue={nation}
-              listItem={ListNation}
-              styleContainer={styles.dropdownWrapper}
-              placeholder="Select your nation"
-              onChangeValue={handleNationChange}
-              maxHeightDropDown={120}
-            />
-          </View>
+            <TouchableOpacity style={styles.dropdownCon} activeOpacity={1}>
+              <Text style={styles.text}>Nation</Text>
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.text}>Your address</Text>
-            <Input
-              placeholder="Address"
-              isPassword={false}
-              value={address}
-              onChangeText={handleAddressChange}
-            />
-          </View>
+              <DropDownPicker
+                initialValue={nation}
+                listItem={ListNation}
+                styleContainer={styles.dropdownWrapper}
+                placeholder="Select your nation"
+                onChangeValue={handleNationChange}
+                maxHeightDropDown={120}
+              />
+            </TouchableOpacity>
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.text}>Your years of experience</Text>
-            <Input
-              placeholder="Years of experience"
-              isPassword={false}
-              keyboardType={'number-pad'}
-              value={timeExp}
-              onChangeText={handleTimeExpChange}
-            />
-          </View>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>Your address</Text>
+              <Input
+                placeholder="Address"
+                isPassword={false}
+                value={address}
+                onChangeText={handleAddressChange}
+              />
+            </TouchableOpacity>
 
-          <View style={styles.inputWrapper}>
-            <Text style={styles.text}>
-              Type your current password to confirm
-            </Text>
-            <Input
-              placeholder="Your current password"
-              isPassword={true}
-              value={currPass}
-              onChangeText={handleCurrPassChange}
-            />
-            {!checkCurrPass && currPass.length > 0 && (
-              <View style={styles.warningWrapper}>
-                <Icon name={IconName['icon-warning']} style={styles.icon} />
-                <Text style={styles.warningText}>
-                  Your current password is wrong.
-                </Text>
-              </View>
-            )}
-          </View>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>Your years of experience</Text>
+              <Input
+                placeholder="Years of experience"
+                isPassword={false}
+                keyboardType={'number-pad'}
+                value={timeExp}
+                onChangeText={handleTimeExpChange}
+              />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.btnWrapper, disable && styles.btnDisable]}
-            disabled={disable}
-            onPress={handleChangePress}>
-            <Text style={styles.btnText}>Update my information</Text>
+            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+              <Text style={styles.text}>
+                Type your current password to confirm
+              </Text>
+              <Input
+                placeholder="Your current password"
+                isPassword={true}
+                value={currPass}
+                onChangeText={handleCurrPassChange}
+              />
+              {!checkCurrPass && currPass.length > 0 && (
+                <TouchableOpacity
+                  style={styles.warningWrapper}
+                  activeOpacity={1}>
+                  <Icon name={IconName['icon-warning']} style={styles.icon} />
+                  <Text style={styles.warningText}>
+                    Your current password is wrong.
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.btnWrapper, disable && styles.btnDisable]}
+              disabled={disable}
+              onPress={handleChangePress}>
+              <Text style={styles.btnText}>Update my information</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.emptyBottom} activeOpacity={1} />
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -300,6 +336,7 @@ const createStyle = () =>
       color: colors.warning,
     },
     inputWrapper: {
+      width: '100%',
       marginTop: 20,
       paddingHorizontal: space.marginHorizontalBtn,
     },
@@ -309,5 +346,9 @@ const createStyle = () =>
       lineHeight: 20,
       fontWeight: 'bold',
       marginBottom: 4,
+    },
+    emptyBottom: {
+      height: 32,
+      width: '100%',
     },
   });

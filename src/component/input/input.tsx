@@ -7,7 +7,6 @@ import {
   TextStyle,
   TouchableOpacity,
   View,
-  ViewProps,
   ViewStyle,
 } from 'react-native';
 import {theme} from '../../hooks/theme/theme';
@@ -63,9 +62,9 @@ export const Input = ({
         editable={editable}
         multiline={multiline}
         placeholder={placeholder}
-        style={styles.inputStyle}
         onChangeText={handleTextChange}
         placeholderTextColor={'gray'}
+        scrollEnabled={false}
       />
       {isPassword && (
         <TouchableOpacity style={styles.btnWrapper} onPress={handleEyePress}>
@@ -111,11 +110,5 @@ const createStyle = (
       width: 28,
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    inputStyle: {
-      color: colors.black,
-      paddingRight: 8,
-      flex: 1,
-      ...inputStyle,
     },
   });
