@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   ImageStyle,
   StyleProp,
@@ -38,11 +38,10 @@ export const Input = ({
   onChangeText,
 }: InputProps) => {
   const styles = createStyle(style, editable, multiline, inputStyle);
+  const inputRef = useRef<TextInput>(null); // Tạo ref cho TextInput
 
   const [valueText, setValueText] = useState<string | null>(value);
-  const [isShowPass, setIsShowPass] = useState<boolean>(
-    isPassword ? true : false,
-  );
+  const [isShowPass, setIsShowPass] = useState<boolean>(isPassword);
 
   const handleTextChange = (value: string) => {
     setValueText(value);
@@ -54,8 +53,12 @@ export const Input = ({
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={1}
+      onPress={() => inputRef.current?.focus()}>
       <TextInput
+        ref={inputRef}
         keyboardType={keyboardType}
         secureTextEntry={isShowPass}
         value={valueText || ''}
@@ -78,7 +81,7 @@ export const Input = ({
           />
         </TouchableOpacity>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 

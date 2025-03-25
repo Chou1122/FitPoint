@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {
   Alert,
+  Keyboard,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -105,6 +106,7 @@ export const ChangeInfo = () => {
   const handleChangePress = async () => {
     // Call api
     setIsLoading(true);
+    Keyboard.dismiss();
 
     try {
       const response = await axios.post(`${API_URL}/update-user-info`, {
@@ -145,10 +147,14 @@ export const ChangeInfo = () => {
           style={{flex: 1}}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
-          <TouchableOpacity activeOpacity={1}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              Keyboard.dismiss();
+            }}>
             <LoadingSpinner isVisible={isLoading} />
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>Your name</Text>
               <Input
                 placeholder="Your name"
@@ -157,16 +163,14 @@ export const ChangeInfo = () => {
                 onChangeText={handleNameChange}
               />
               {email !== null && !checkEmail && email.length > 0 && (
-                <TouchableOpacity
-                  style={styles.warningWrapper}
-                  activeOpacity={1}>
+                <View style={styles.warningWrapper}>
                   <Icon name={IconName['icon-warning']} style={styles.icon} />
                   <Text style={styles.warningText}>Your email is invalid!</Text>
-                </TouchableOpacity>
+                </View>
               )}
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>Your email</Text>
               <Input
                 placeholder="Email"
@@ -175,16 +179,14 @@ export const ChangeInfo = () => {
                 onChangeText={handleEmailChange}
               />
               {email !== null && !checkEmail && email.length > 0 && (
-                <TouchableOpacity
-                  style={styles.warningWrapper}
-                  activeOpacity={1}>
+                <View style={styles.warningWrapper}>
                   <Icon name={IconName['icon-warning']} style={styles.icon} />
                   <Text style={styles.warningText}>Your email is invalid!</Text>
-                </TouchableOpacity>
+                </View>
               )}
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>Your phone number</Text>
               <Input
                 placeholder="Phone number"
@@ -193,9 +195,9 @@ export const ChangeInfo = () => {
                 value={phone}
                 onChangeText={handlePhoneChange}
               />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.dropdownCon} activeOpacity={1}>
+            <View style={styles.dropdownCon}>
               <Text style={styles.text}>Gender</Text>
 
               <DropDownPicker
@@ -205,9 +207,9 @@ export const ChangeInfo = () => {
                 placeholder="Select your gender"
                 onChangeValue={handleGenderChange}
               />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.dropdownCon} activeOpacity={1}>
+            <View style={styles.dropdownCon}>
               <Text style={styles.text}>Nation</Text>
 
               <DropDownPicker
@@ -218,9 +220,9 @@ export const ChangeInfo = () => {
                 onChangeValue={handleNationChange}
                 maxHeightDropDown={120}
               />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>Your address</Text>
               <Input
                 placeholder="Address"
@@ -228,9 +230,9 @@ export const ChangeInfo = () => {
                 value={address}
                 onChangeText={handleAddressChange}
               />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>Your years of experience</Text>
               <Input
                 placeholder="Years of experience"
@@ -239,9 +241,9 @@ export const ChangeInfo = () => {
                 value={timeExp}
                 onChangeText={handleTimeExpChange}
               />
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.inputWrapper} activeOpacity={1}>
+            <View style={styles.inputWrapper}>
               <Text style={styles.text}>
                 Type your current password to confirm
               </Text>
@@ -252,16 +254,14 @@ export const ChangeInfo = () => {
                 onChangeText={handleCurrPassChange}
               />
               {!checkCurrPass && currPass.length > 0 && (
-                <TouchableOpacity
-                  style={styles.warningWrapper}
-                  activeOpacity={1}>
+                <View style={styles.warningWrapper}>
                   <Icon name={IconName['icon-warning']} style={styles.icon} />
                   <Text style={styles.warningText}>
                     Your current password is wrong.
                   </Text>
-                </TouchableOpacity>
+                </View>
               )}
-            </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={[styles.btnWrapper, disable && styles.btnDisable]}
