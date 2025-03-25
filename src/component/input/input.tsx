@@ -102,6 +102,7 @@ const createStyle = (
       borderColor: colors.gray3,
       flexDirection: 'row',
       maxHeight: !multiline ? 40 : null,
+      justifyContent: 'space-between',
       ...style,
     },
     btnWrapper: {
