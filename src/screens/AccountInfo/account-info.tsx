@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
+  PermissionsAndroid,
   Platform,
   ScrollView,
   StyleSheet,
@@ -31,6 +33,8 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {API_URL} from '@env';
 
+import {launchImageLibrary} from 'react-native-image-picker';
+
 const {space, colors, font} = theme;
 
 export const AccountInfo = () => {
@@ -59,9 +63,12 @@ export const AccountInfo = () => {
   const [address, setAddress] = useState<string | null>(null);
   const [nation, setNation] = useState<Nation | null>(null);
   const [timeExp, setTimeExp] = useState<number | string | null>(null);
+  const [avatar, setAvatar] = useState<any>(null);
+
   const [memberShip, setMemberShip] = useState(1);
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [showPopupAvt, setShowPopupAvt] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -87,6 +94,7 @@ export const AccountInfo = () => {
       setAddress(data.address);
       setTimeExp(data.experience);
       setName(data.name);
+      setAvatar(data.avt);
 
       setIsLoading(false);
     } catch (error: any) {
@@ -148,6 +156,102 @@ export const AccountInfo = () => {
     setShowPopup(false);
   };
 
+  const handleClostPopupAvt = () => {
+    setShowPopupAvt(false);
+  };
+
+  const requestPermission = async () => {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+        {
+          title: 'Permission Required',
+          message: 'App needs access to your photos to select avatar.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+
+    return true;
+  };
+
+  const handleChangeAvtPress = async () => {
+    const hasPermission = await requestPermission();
+    if (!hasPermission) {
+      return;
+    }
+
+    launchImageLibrary({mediaType: 'photo'}, async response => {
+      if (response.didCancel || response.errorCode) return;
+
+      const asset = response.assets?.[0];
+
+      if (!asset) return;
+
+      await uploadImageToCloudinary(asset);
+    });
+  };
+
+  const uploadImageToCloudinary = async (photo: any) => {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+
+      const uri =
+        Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri;
+
+      data.append('file', {
+        uri: photo.uri,
+        name: photo.fileName || `photo_${Date.now()}.jpg`,
+        type: photo.type || 'image/jpeg',
+      });
+
+      data.append('upload_preset', 'perfect-fit'); // thay bằng upload preset của bạn
+      data.append('cloud_name', 'dx3prv3ka'); // thay bằng cloud name của bạn
+
+      const res = await fetch(
+        'https://api.cloudinary.com/v1_1/dx3prv3ka/image/upload',
+        {
+          method: 'POST',
+          body: data,
+        },
+      );
+
+      const result = await res.json();
+
+      if (result.secure_url) {
+        // Save avt to db
+        await axios.post(`${API_URL}/update-user-avt`, {
+          userId: userInfo.id,
+          avt: result.secure_url,
+        });
+
+        setAvatar(result.secure_url);
+
+        // Alert.alert('Success', 'Avatar updated successfully!');
+        setShowPopupAvt(true);
+      } else {
+        Alert.alert('Upload failed', 'Please try again.');
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Upload error:', error);
+      setIsLoading(false);
+      Alert.alert('Error', 'Something went wrong during upload.');
+    }
+  };
+
   return (
     <View style={styles.contanier}>
       <Header btnGoBack={false} title="My Infomation" />
@@ -157,6 +261,15 @@ export const AccountInfo = () => {
           content={popupTitle}
         />
       </Popup>
+
+      {/* Popup avt */}
+      <Popup isVisible={showPopupAvt}>
+        <PopUpSuccessChangePass2
+          onPress={handleClostPopupAvt}
+          content={'Avatar updated successfully!'}
+        />
+      </Popup>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
@@ -169,6 +282,8 @@ export const AccountInfo = () => {
                 height={space.avtInfo}
                 width={space.avtInfo}
                 editable={true}
+                source={avatar}
+                onEditPress={handleChangeAvtPress}
               />
             </View>
 

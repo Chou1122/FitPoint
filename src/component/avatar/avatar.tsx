@@ -11,6 +11,7 @@ interface AvatarProps {
   borderRadius?: number;
   source?: string;
   editable?: boolean;
+  onEditPress?: () => void;
 }
 
 export const Avatar = ({
@@ -19,11 +20,12 @@ export const Avatar = ({
   width = space.avtNormal,
   source,
   editable = false,
+  onEditPress,
 }: AvatarProps) => {
   const styles = creatStyle(width, height);
 
   const handleEditPress = () => {
-    // Edit avt
+    onEditPress && onEditPress();
   };
 
   return (
@@ -49,7 +51,20 @@ export const Avatar = ({
           style={{height: (height * 90) / 100, width: (width * 90) / 100}}
         />
       ) : (
-        <></>
+        <View
+          style={{
+            height: (height * 90) / 100,
+            width: (width * 90) / 100,
+            overflow: 'hidden',
+            borderRadius: 1000,
+          }}>
+          <Image
+            source={{
+              uri: source,
+            }}
+            style={styles.imgWrapper}
+          />
+        </View>
       )}
     </View>
   );
@@ -75,5 +90,9 @@ const creatStyle = (width: number, height: number) =>
       height: (height * 16) / 100,
       width: (width * 16) / 100,
       color: colors.blue2,
+    },
+    imgWrapper: {
+      height: '100%',
+      width: '100%',
     },
   });
