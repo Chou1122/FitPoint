@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   ImageStyle,
   StyleProp,
@@ -40,7 +40,6 @@ export const Input = ({
   textColor = 'black',
 }: InputProps) => {
   const styles = createStyle(style, editable, multiline, inputStyle);
-  const inputRef = useRef<TextInput>(null); // Tạo ref cho TextInput
 
   const [valueText, setValueText] = useState<string | null>(value);
   const [isShowPass, setIsShowPass] = useState<boolean>(isPassword);
@@ -55,12 +54,8 @@ export const Input = ({
   };
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      activeOpacity={1}
-      onPress={() => inputRef.current?.focus()}>
+    <View style={styles.container}>
       <TextInput
-        ref={inputRef}
         keyboardType={keyboardType}
         secureTextEntry={isShowPass}
         value={valueText || ''}
@@ -70,7 +65,7 @@ export const Input = ({
         onChangeText={handleTextChange}
         placeholderTextColor={'gray'}
         scrollEnabled={false}
-        style={{color: textColor}}
+        style={{height: 50, color: textColor, flexGrow: 1}}
       />
       {isPassword && (
         <TouchableOpacity style={styles.btnWrapper} onPress={handleEyePress}>
@@ -84,7 +79,7 @@ export const Input = ({
           />
         </TouchableOpacity>
       )}
-    </TouchableOpacity>
+    </View>
   );
 };
 
