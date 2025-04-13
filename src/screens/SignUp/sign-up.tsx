@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     maxHeight: 52,
     height: 52,
+    width: '100%',
   },
   inputStyle: {
     fontSize: 16,

@@ -23,6 +23,7 @@ interface InputProps {
   isPassword?: boolean;
   keyboardType?: any;
   inputStyle?: StyleProp<ViewStyle | TextStyle | ImageStyle>;
+  textColor?: string;
   onChangeText?: (value: string) => void;
 }
 
@@ -36,6 +37,7 @@ export const Input = ({
   isPassword = false,
   keyboardType = 'default',
   onChangeText,
+  textColor = 'black',
 }: InputProps) => {
   const styles = createStyle(style, editable, multiline, inputStyle);
   const inputRef = useRef<TextInput>(null); // Tạo ref cho TextInput
@@ -68,6 +70,7 @@ export const Input = ({
         onChangeText={handleTextChange}
         placeholderTextColor={'gray'}
         scrollEnabled={false}
+        style={{color: textColor}}
       />
       {isPassword && (
         <TouchableOpacity style={styles.btnWrapper} onPress={handleEyePress}>
