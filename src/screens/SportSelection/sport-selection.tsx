@@ -14,14 +14,6 @@ import {CustomText as Text} from '../../component/text-custom/text-custom';
 
 const {colors} = theme;
 
-const mockData = [
-  {name: 'Push up', id: '0'},
-  {name: 'Jump Squat', id: '1', duration: '2', score: 21},
-  {name: 'Bicep Curl', id: '2', duration: '1', score: 100},
-  {name: 'Leg Raise', id: '3', duration: '5', score: 49},
-  {name: 'Dead Lift', id: '4', duration: '3', score: 11},
-];
-
 export const SportSelection = () => {
   const [sportList, setSportList] = useState<Array<SportCardProps>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);

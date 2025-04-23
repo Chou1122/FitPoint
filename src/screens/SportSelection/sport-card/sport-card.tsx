@@ -17,6 +17,7 @@ export interface SportCardProps {
   maxScore?: number;
   id: string;
   showVideo?: boolean;
+  urlVideo: string;
   onPressCard?: () => void;
   onPressVideo?: () => void;
 }
@@ -29,6 +30,7 @@ export const SportCard = ({
   time = '1',
   id = '0',
   showVideo = false,
+  urlVideo = 'https://res.cloudinary.com/dx3prv3ka/video/upload/v1745405487/push_up_fpvbve.mp4',
   onPressCard,
   onPressVideo,
 }: SportCardProps) => {
@@ -42,6 +44,8 @@ export const SportCard = ({
   const [imgThumbnail, setImgThumbnail] = useState<string | undefined>(img);
 
   const handleCardPress = () => {
+    console.log('UR: ', urlVideo);
+
     onPressCard
       ? onPressCard()
       : // @ts-ignore
@@ -50,6 +54,7 @@ export const SportCard = ({
           name: name,
           img: imgThumbnail,
           time: time,
+          urlVideo: urlVideo,
         });
   };
 

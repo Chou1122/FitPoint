@@ -20,10 +20,11 @@ export interface SportDetailProps {
   img: string | undefined;
   time: string;
   name: string;
+  urlVideo: string;
 }
 
 export const SportDetail = (props: any) => {
-  const {id = '0', img, time, name} = props.route.params;
+  const {id = '0', img, time, name, urlVideo} = props.route.params;
   const userInfo = useSelector((state: any) => state.userInfo);
 
   const [history, setHistory] = useState<any>([]);
@@ -72,6 +73,7 @@ export const SportDetail = (props: any) => {
       img: img,
       time: time,
       name: name,
+      urlVideo: urlVideo,
     });
   };
 
@@ -82,6 +84,7 @@ export const SportDetail = (props: any) => {
       img: img,
       time: time,
       name: name,
+      urlVideo: urlVideo,
     });
   };
 

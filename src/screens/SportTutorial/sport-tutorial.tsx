@@ -26,7 +26,13 @@ const mockTip = [
 export const SportTutorial = (props: any) => {
   const navigation = useAppNavigation();
 
-  const {id = '0', img, time, name} = props.route.params;
+  const {
+    id = '0',
+    img,
+    time,
+    name,
+    urlVideo = 'https://res.cloudinary.com/dx3prv3ka/video/upload/v1745405487/push_up_fpvbve.mp4',
+  } = props.route.params;
 
   const videoRef = useRef<VideoRef>(null);
   const [isPaused, setIsPaused] = useState<boolean>(true);
@@ -104,7 +110,9 @@ export const SportTutorial = (props: any) => {
           ref={videoRef}
           style={styles.video}
           resizeMode="cover"
-          source={require('../../assets/videos/push_up.mp4')}
+          source={{
+            uri: urlVideo,
+          }}
           paused={isPaused}
           onEnd={handleVideoEnd}
         />
