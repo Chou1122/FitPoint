@@ -1,9 +1,12 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CustomText as Text} from '../../../component/text-custom/text-custom';
 import {theme} from '../../../hooks/theme/theme';
 import useAppNavigation from '../../../hooks/navigation/use-navigation';
 import {formatTime} from '../../../helpers/time.helper';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
+import {API_URL} from '@env';
 
 const {colors} = theme;
 
@@ -18,6 +21,7 @@ export interface SportCardProps {
   id: string;
   showVideo?: boolean;
   urlVideo: string;
+  call?: boolean;
   onPressCard?: () => void;
   onPressVideo?: () => void;
 }
@@ -31,13 +35,19 @@ export const SportCard = ({
   id = '0',
   showVideo = false,
   urlVideo = 'https://res.cloudinary.com/dx3prv3ka/video/upload/v1745405487/push_up_fpvbve.mp4',
+  call = false,
   onPressCard,
   onPressVideo,
 }: SportCardProps) => {
+  const [scoreCal, setScoreCal] = useState(score);
+  const [maxScoreCal, setMaxScoreCal] = useState(maxScore);
+
   const percentScore: string = useMemo(() => {
-    const percentage = (score / maxScore) * 100;
+    const percentage = (scoreCal / maxScoreCal) * 100;
     return `${Math.min(Math.max(percentage, 0), 100)}%`;
-  }, [score, maxScore]);
+  }, [scoreCal, maxScoreCal]);
+
+  const userInfo = useSelector((state: any) => state.userInfo);
 
   const navigation = useAppNavigation();
 
@@ -68,6 +78,33 @@ export const SportCard = ({
     );
   };
 
+  const getMaxScore = (data: any) => {
+    //@ts-ignore
+    return Math.max(...data.map(item => item.scores));
+  };
+
+  const getSportHistory = async () => {
+    try {
+      //@ts-ignore
+      const response = await axios.get(`${API_URL}/get-sport-historys`, {
+        params: {
+          userId: userInfo.id,
+          sportId: id,
+        },
+      });
+
+      const maxS = Math.min(getMaxScore(response.data) * 10, 100);
+
+      setScoreCal(maxS);
+    } catch (error: any) {
+      console.log('ERROR: ', error);
+    }
+  };
+
+  useEffect(() => {
+    call && getSportHistory();
+  }, []);
+
   return (
     <TouchableOpacity style={styles.container} onPress={handleCardPress}>
       <View style={styles.imgWrapper}>
@@ -88,7 +125,9 @@ export const SportCard = ({
             time,
           )}`}</Text>
 
-          <Text style={styles.textScore}>{`Your best score: ${score}`}</Text>
+          <Text style={styles.textScore}>{`Your best score: ${
+            scoreCal / 10
+          }`}</Text>
 
           {showVideo && (
             <TouchableOpacity onPress={handleVideoPress}>
@@ -105,7 +144,11 @@ export const SportCard = ({
               {
                 width: percentScore,
                 backgroundColor:
-                  percentScore == '100%' ? colors.green : colors.red,
+                  percentScore == '100%'
+                    ? colors.green
+                    : percentScore >= '70%'
+                    ? colors.yellow2
+                    : colors.red,
               },
             ]}
           />

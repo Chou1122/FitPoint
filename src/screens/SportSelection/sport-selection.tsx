@@ -19,7 +19,7 @@ export const SportSelection = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const renderCardSport = (props: SportCardProps) => {
-    return <SportCard key={props.id} {...props} />;
+    return <SportCard key={props.id} {...props} call={true} />;
   };
 
   const handleGetSport = async () => {
