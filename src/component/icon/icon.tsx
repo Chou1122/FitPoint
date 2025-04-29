@@ -29,6 +29,10 @@ import {IconCheck} from './icons-list/icon-check';
 import {IconCameraSlash} from './icons-list/icon-camera-slash';
 import {IconUp} from './icons-list/icon-up';
 import {IconDown} from './icons-list/icon-down';
+import {IconStatic} from './icons-list/icon-static';
+import {IconCalendar} from './icons-list/icon-calendar';
+import {IconNext} from './icons-list/icon-next';
+import {IconPrevious} from './icons-list/icon-previous';
 
 import {IconVietNam} from './icons-list/icon-vietnam';
 import {IconChina} from './icons-list/icon-china';
@@ -66,6 +70,10 @@ export enum IconName {
   'icon-camera-slash',
   'icon-up',
   'icon-down',
+  'icon-static',
+  'icon-calendar',
+  'icon-next',
+  'icon-previous',
 
   'vietnam',
   'china',
@@ -156,6 +164,14 @@ export const Icon = ({name, style = {}}: IconProps) => {
         <IconRussia {...style} />
       ) : name === IconName['brazil'] ? (
         <IconBrazil {...style} />
+      ) : name === IconName['icon-static'] ? (
+        <IconStatic {...style} />
+      ) : name === IconName['icon-calendar'] ? (
+        <IconCalendar {...style} />
+      ) : name === IconName['icon-next'] ? (
+        <IconNext {...style} />
+      ) : name === IconName['icon-previous'] ? (
+        <IconPrevious {...style} />
       ) : null}
     </View>
   );

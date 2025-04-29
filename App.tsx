@@ -45,8 +45,8 @@ function MainTabs() {
             iconName = IconName['icon-home'];
           } else if (route.name === 'Profile') {
             iconName = IconName['icon-profile'];
-          } else if (route.name === 'Event') {
-            iconName = IconName['icon-trophy-star'];
+          } else if (route.name === 'Statistic') {
+            iconName = IconName['icon-static'];
           }
 
           return (
@@ -77,7 +77,7 @@ function MainTabs() {
         tabBarInactiveTintColor: colors.gray3,
       })}>
       <Tab.Screen name="Home" component={MainStack} />
-      <Tab.Screen name="Event" component={EventStack} />
+      <Tab.Screen name="Statistic" component={EventStack} />
       <Tab.Screen name="Profile" component={InfoStack} />
     </Tab.Navigator>
   );
