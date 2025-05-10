@@ -17,6 +17,7 @@ export const processVideoWithAI = async (
   name: string,
   maxScore: number,
   score: number,
+  urlVideo: string,
 ): Promise<void> => {
   // console.log('Video url:', videoUrl);
   // console.log('ID: ', sportId);
@@ -34,7 +35,7 @@ export const processVideoWithAI = async (
     if (response.status === 200) {
       setIsLoading(false);
 
-      console.log(response.data.aiResult);
+      // console.log(response.data.aiResult);
 
       //@ts-ignore
       navigation.navigate('MainTab', {
@@ -49,6 +50,7 @@ export const processVideoWithAI = async (
             name,
             maxScore,
             score,
+            urlVideo,
           },
         },
       });

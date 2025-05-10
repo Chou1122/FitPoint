@@ -19,7 +19,7 @@ export const RecordResult = () => {
   const params = route.params;
 
   //@ts-ignore
-  const {id, time, img, name, maxScore, score} = params;
+  const {id, time, img, name, maxScore, score, urlVideo} = params;
 
   // @ts-ignore
   const result: RecordResultProps = route.params.videoResult;
@@ -65,7 +65,7 @@ export const RecordResult = () => {
 
   const onBack = () => {
     //@ts-ignore
-    navigation.navigate('SportDetail', {id: id, img, time, name});
+    navigation.navigate('SportDetail', {id: id, img, time, name, urlVideo});
   };
 
   const sportListPress = () => {
@@ -111,7 +111,7 @@ export const RecordResult = () => {
           img={img}
           maxScore={maxScore}
           score={(overall || 0) < score ? score : overall}
-          urlVideo=""
+          urlVideo={urlVideo}
         />
       </View>
 
