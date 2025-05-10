@@ -254,7 +254,7 @@ export const SportRecording = (props: any) => {
         onPress={handlePressBtn}>
         <Text style={styles.textBtnStart}>
           {isRecording && !canStopRecording && countDown2 >= 0
-            ? `${countDown2}`
+            ? `You can submit the video in ${countDown2}`
             : isRecording || isCountdown
             ? 'Submit the video'
             : 'Start recording'}
