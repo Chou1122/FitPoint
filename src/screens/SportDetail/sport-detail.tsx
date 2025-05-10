@@ -88,9 +88,16 @@ export const SportDetail = (props: any) => {
     });
   };
 
+  const onBackPress = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'MainTab'}],
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Header title={name} />
+      <Header title={name} onBack={onBackPress} />
       <View style={styles.contentWrapper}>
         <LoadingSpinner isVisible={isLoading} />
         <SportCard
