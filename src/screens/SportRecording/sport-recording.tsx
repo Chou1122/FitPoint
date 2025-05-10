@@ -32,6 +32,8 @@ export const SportRecording = (props: any) => {
   const userInfo = useSelector((state: any) => state.userInfo);
 
   const [isRecording, setIsRecording] = useState(false);
+  const [canStopRecording, setCanStopRecording] = useState(true);
+  const [countDown2, setCountDown2] = useState<number>(0);
   const [isCountdown, setIsCountdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [countDown, setCountDown] = useState<number>(-1);
@@ -98,6 +100,23 @@ export const SportRecording = (props: any) => {
   const startRecording = async () => {
     if (cameraRef.current == null) return;
     setIsRecording(true);
+    setCanStopRecording(false);
+
+    setTimeout(() => {
+      setCanStopRecording(true);
+    }, 3000);
+
+    setCountDown2(3);
+    const interval = setInterval(() => {
+      setCountDown2(prev => {
+        if (prev === 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     await cameraRef.current.startRecording({
       onRecordingFinished: async video =>
         handleRecordingFinished(
@@ -114,12 +133,13 @@ export const SportRecording = (props: any) => {
       onRecordingError: error => {
         console.error('Recording error:', error);
         setIsRecording(false);
+        setCanStopRecording(true);
       },
     });
   };
 
   const stopRecording = async () => {
-    if (cameraRef.current == null) return;
+    if (cameraRef.current == null || !canStopRecording) return;
     await cameraRef.current.stopRecording();
     setIsRecording(false);
     setIsLoading(true);
@@ -212,11 +232,21 @@ export const SportRecording = (props: any) => {
       {cameraAccess ? <>{renderCamera()}</> : <>{renderMockCamera()}</>}
 
       <TouchableOpacity
-        disabled={isCountdown || !cameraAccess}
-        style={[styles.btnStartWrapper, isCountdown && styles.btnDisabled]}
+        disabled={
+          isCountdown || !cameraAccess || (isRecording && !canStopRecording)
+        }
+        style={[
+          styles.btnStartWrapper,
+          (isCountdown || (isRecording && !canStopRecording)) &&
+            styles.btnDisabled,
+        ]}
         onPress={handlePressBtn}>
         <Text style={styles.textBtnStart}>
-          {isRecording || isCountdown ? 'Submit the video' : 'Start recording'}
+          {isRecording && !canStopRecording && countDown2 >= 0
+            ? `${countDown2}`
+            : isRecording || isCountdown
+            ? 'Submit the video'
+            : 'Start recording'}
         </Text>
       </TouchableOpacity>
     </View>
