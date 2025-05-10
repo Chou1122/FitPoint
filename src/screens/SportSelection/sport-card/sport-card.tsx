@@ -65,6 +65,8 @@ export const SportCard = ({
           img: imgThumbnail,
           time: time,
           urlVideo: urlVideo,
+          maxScore: maxScore,
+          score: scoreCal,
         });
   };
 

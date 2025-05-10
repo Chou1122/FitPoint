@@ -32,6 +32,8 @@ export const SportTutorial = (props: any) => {
     time,
     name,
     urlVideo = 'https://res.cloudinary.com/dx3prv3ka/video/upload/v1745405487/push_up_fpvbve.mp4',
+    maxScore,
+    score,
   } = props.route.params;
 
   const videoRef = useRef<VideoRef>(null);
@@ -74,7 +76,16 @@ export const SportTutorial = (props: any) => {
   };
 
   const handleStartPress = () => {
-    navigation.navigate('SportRecording');
+    //@ts-ignore
+    navigation.navigate('SportRecording', {
+      maxScore,
+      score,
+      id,
+      img,
+      time,
+      name,
+      urlVideo,
+    });
     handleVideoEnd();
   };
 

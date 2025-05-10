@@ -15,9 +15,11 @@ export const processVideoWithAI = async (
   img: string | any,
   time: number | string | any,
   name: string,
+  maxScore: number,
+  score: number,
 ): Promise<void> => {
-  console.log('Video url:', videoUrl);
-  console.log('ID: ', sportId);
+  // console.log('Video url:', videoUrl);
+  // console.log('ID: ', sportId);
 
   try {
     const response = await axios.post(
@@ -45,6 +47,8 @@ export const processVideoWithAI = async (
             img,
             time,
             name,
+            maxScore,
+            score,
           },
         },
       });

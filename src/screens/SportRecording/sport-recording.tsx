@@ -23,7 +23,7 @@ import {formatTime} from '../../helpers/time.helper';
 const {colors, font, space} = theme;
 
 export const SportRecording = (props: any) => {
-  const {id: sportId, time, img, name} = props.route.params;
+  const {id: sportId, time, img, name, maxScore, score} = props.route.params;
 
   const device = useCameraDevice('back');
 
@@ -129,6 +129,8 @@ export const SportRecording = (props: any) => {
           img,
           time,
           name,
+          maxScore,
+          score,
         ),
       onRecordingError: error => {
         console.error('Recording error:', error);

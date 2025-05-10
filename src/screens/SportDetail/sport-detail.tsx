@@ -21,10 +21,20 @@ export interface SportDetailProps {
   time: string;
   name: string;
   urlVideo: string;
+  maxScore?: any;
+  score?: any;
 }
 
 export const SportDetail = (props: any) => {
-  const {id = '0', img, time, name, urlVideo} = props.route.params;
+  const {
+    id = '0',
+    img,
+    time,
+    name,
+    urlVideo,
+    maxScore,
+    score,
+  } = props.route.params;
   const userInfo = useSelector((state: any) => state.userInfo);
 
   const [history, setHistory] = useState<any>([]);
@@ -74,6 +84,8 @@ export const SportDetail = (props: any) => {
       time: time,
       name: name,
       urlVideo: urlVideo,
+      maxScore: maxScore,
+      score: score,
     });
   };
 
@@ -85,6 +97,8 @@ export const SportDetail = (props: any) => {
       time: time,
       name: name,
       urlVideo: urlVideo,
+      maxScore: maxScore,
+      score: score,
     });
   };
 
@@ -108,6 +122,9 @@ export const SportDetail = (props: any) => {
           showVideo={true}
           onPressCard={handleTutorialPress}
           onPressVideo={handleTutorialPress}
+          maxScore={maxScore}
+          score={score}
+          urlVideo={urlVideo}
         />
         {history.length > 0 ? (
           <View style={{flex: 1, marginHorizontal: 20}}>

@@ -19,7 +19,7 @@ export const RecordResult = () => {
   const params = route.params;
 
   //@ts-ignore
-  const {id, time, img, name} = params;
+  const {id, time, img, name, maxScore, score} = params;
 
   // @ts-ignore
   const result: RecordResultProps = route.params.videoResult;
@@ -50,7 +50,7 @@ export const RecordResult = () => {
   );
 
   useEffect(() => {
-    console.log('RES: ', JSON.stringify(result));
+    // console.log('RES: ', JSON.stringify(result));
 
     setDuration(roundToTwo(result?.duration, 0) ?? null);
     setTotal(roundToTwo(result?.total, 2) ?? null);
@@ -109,6 +109,9 @@ export const RecordResult = () => {
           time={time}
           name={name}
           img={img}
+          maxScore={maxScore}
+          score={(overall || 0) < score ? score : overall}
+          urlVideo=""
         />
       </View>
 

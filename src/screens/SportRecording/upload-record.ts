@@ -20,6 +20,8 @@ export const handleRecordingFinished = async (
   img: string | any,
   time: number | string | any,
   name: string,
+  maxScore: number,
+  score: number,
 ): Promise<void> => {
   console.log('Video file saved at:', video.path);
 
@@ -53,6 +55,8 @@ export const handleRecordingFinished = async (
         img,
         time,
         name,
+        maxScore,
+        score,
       );
     } else {
       console.error('API error:', response.data.error);
