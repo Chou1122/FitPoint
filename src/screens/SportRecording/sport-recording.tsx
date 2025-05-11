@@ -7,6 +7,7 @@ import {
   Platform,
   Alert,
   TouchableWithoutFeedback,
+  ViewStyle,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {CustomText as Text} from '../../component/text-custom/text-custom';
@@ -47,6 +48,8 @@ export const SportRecording = (props: any) => {
   const [countDown, setCountDown] = useState<number>(-1);
   const [tipList, setTipList] = useState(mockTips);
   const [cameraAccess, setCameraAccess] = useState<boolean>(false);
+
+  const [camStyles, setCamStyles] = useState<ViewStyle>({width: 0, height: 0});
 
   const requestCameraPermission = async () => {
     try {
@@ -171,10 +174,18 @@ export const SportRecording = (props: any) => {
         {device && (
           <Camera
             video={true}
-            style={styles.camera}
+            // style={styles.camera}
+            style={camStyles}
             device={device}
             isActive={true}
             ref={cameraRef}
+            onLayout={() => {
+              // set new actual Styles after first render
+              setCamStyles({
+                width: '100%',
+                height: '100%',
+              });
+            }}
           />
         )}
 
@@ -224,6 +235,22 @@ export const SportRecording = (props: any) => {
       </View>
     );
   }, [styles]);
+
+  useEffect(() => {
+    return () => {
+      // Clear camera and recording if needed when component unmounts
+      if (cameraRef.current) {
+        // Stop recording if still ongoing
+        if (isRecording) {
+          cameraRef.current
+            .stopRecording()
+            .catch(err =>
+              console.warn('Error stopping recording on unmount:', err),
+            );
+        }
+      }
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -290,9 +317,9 @@ const styles = StyleSheet.create({
   camera: {
     width: '100%',
     height: '100%',
-    position: 'absolute',
-    top: 0,
-    left: 0,
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
   },
   mockCamera: {
     flex: 1,
