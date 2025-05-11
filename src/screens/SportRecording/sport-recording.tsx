@@ -129,6 +129,7 @@ export const SportRecording = (props: any) => {
     }, 1000);
 
     await cameraRef.current.startRecording({
+      fileType: 'mp4',
       onRecordingFinished: async video =>
         handleRecordingFinished(
           video,
