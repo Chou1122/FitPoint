@@ -181,7 +181,7 @@ export const Login = () => {
           />
           {
             <View style={styles.infoWrapper}>
-              <Text style={styles.textInfo}>v 1.2.0</Text>
+              <Text style={styles.textInfo}>v 1.2.2</Text>
             </View>
           }
         </View>
