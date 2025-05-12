@@ -250,39 +250,29 @@ export const Event = () => {
   };
 
   const calculateHighScoreRatioPerRange = (data: any, date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    const lastDay = new Date(year, month + 1, 0).getDate();
-    const marks = [1, 5, 10, 15, 20, 25, lastDay];
+    const checkpoints = getMonthCheckpoints(date);
     const result = [];
 
-    for (let i = 0; i < marks.length; i++) {
-      const start = marks[i - 1] ? marks[i - 1] + 1 : 1;
-      const end = marks[i];
+    for (let i = 0; i < checkpoints.length; i++) {
+      const start = i === 0 ? 1 : checkpoints[i - 1] + 1;
+      const end = checkpoints[i];
 
-      const daysInRange = new Set();
-      const highScoreDays = new Set();
+      let total = 0,
+        count = 0;
 
-      data.forEach((item: any) => {
-        const itemDate = new Date(item.time);
-        if (itemDate.getFullYear() === year && itemDate.getMonth() === month) {
-          const day = itemDate.getDate();
-          if (day >= start && day <= end) {
-            daysInRange.add(day);
-            if (item.scores >= 8) {
-              highScoreDays.add(day);
-            }
+      for (let j = 0; j < data.length; j++) {
+        const day = new Date(data[j].time).getDate();
+        if (day >= start && day <= end) {
+          total++;
+          if (data[j].scores >= 8) {
+            count++;
           }
         }
-      });
+      }
 
-      const ratio =
-        daysInRange.size > 0
-          ? Math.round((highScoreDays.size / daysInRange.size) * 100)
-          : 0;
+      const res = ((count / total) * 100) | 0;
 
-      result.push(ratio);
+      result.push(res);
     }
 
     return result;
@@ -347,7 +337,7 @@ export const Event = () => {
             historyFiltered,
             selectedDate,
           ), // Line 1
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // màu tím
+          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
           strokeWidth: 2,
         },
         {
@@ -355,12 +345,12 @@ export const Event = () => {
             historyFiltered,
             selectedDate,
           ), // Line 2
-          color: (opacity = 1) => `rgba(34, 128, 176, ${opacity})`, // màu xanh
+          color: (opacity = 1) => `rgba(34, 128, 176, ${opacity})`,
           strokeWidth: 2,
         },
         {
           data: calculateHighScoreRatioPerRange(historyFiltered, selectedDate), // Line 3
-          color: (opacity = 1) => `rgba(34, 165, 244, ${opacity})`, // màu tím
+          color: (opacity = 1) => `rgba(34, 165, 244, ${opacity})`,
           strokeWidth: 2,
         },
       ],
