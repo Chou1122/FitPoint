@@ -233,8 +233,8 @@ export const AccountInfo = () => {
         type: photo.type || 'image/jpeg',
       });
 
-      data.append('upload_preset', 'perfect-fit'); // thay bằng upload preset của bạn
-      data.append('cloud_name', 'dx3prv3ka'); // thay bằng cloud name của bạn
+      data.append('upload_preset', 'perfect-fit');
+      data.append('cloud_name', 'dx3prv3ka');
 
       const res = await fetch(
         'https://api.cloudinary.com/v1_1/dx3prv3ka/image/upload',
