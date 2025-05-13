@@ -11,7 +11,7 @@ interface Navigation {
   navigate: (route: string, params?: any) => void;
 }
 
-const MAX_DIRECT_UPLOAD_SIZE = 80 * 1024 * 1024; // 80MB
+const MAX_DIRECT_UPLOAD_SIZE = 65 * 1024 * 1024; // 65MB
 
 export const handleRecordingFinished = async (
   video: Video,
